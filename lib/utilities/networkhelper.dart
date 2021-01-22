@@ -68,14 +68,14 @@ class NetworkHelper {
 
         String titlee=parseHtml(decodedData[i]['title']['rendered']);
         String shortdescc=parseHtml(decodedData[i]['excerpt']['rendered']);
-        String contentt=parseHtml(decodedData[i]['content']['rendered']);
+        //String contentt=parseHtml(decodedData[i]['content']['rendered']);
         String id=decodedData[i]['id'].toString();
 
         Article article=Article(
           id:id,
           title:titlee,
           urlToImage: decodedData[i]['jetpack_featured_media_url'],
-          content: contentt,
+          content: decodedData[i]['content']['rendered'],
           shortdesc:shortdescc,
           articleUrl: decodedData[i]['link'],
           author: decodedData[i]['author'],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
-class Deals extends StatelessWidget {
+class Profile extends StatelessWidget {
 
-  static const routeName='/deals';
+  static const routeName='/profile';
 
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.yellow,);
+    return Container(color: Colors.blueGrey,);
   }
 }

@@ -5,13 +5,23 @@ import '../utilities/networkhelper.dart';
 
 class SelectedCategory with ChangeNotifier{
 
-  bool toshow=true;
+  int selectedIndex=0;
 
+  bool toshow=true;
   String category='Alvinology';
   List<Article> providerArticles=[];
   var numberofstoredarticles=0;
   int currentpagenumber=1;
   List<CategoryModel> categories = [CategoryModel('Alvinology','https://media.alvinology.com/uploads/2020/11/am-logo-new%402x.png'),CategoryModel('Lemon-Film','https://cdn.britannica.com/84/188484-050-F27B0049/lemons-tree.jpg')];
+
+
+  void changeSelectedIndex(int newindex){
+    selectedIndex=newindex;
+    notifyListeners();
+
+  }
+
+
 
   Article findById(String id){
 

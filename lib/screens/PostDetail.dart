@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import '../providers/selected_category.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class PostDetail extends StatelessWidget {
 
   //for when navigating on the fly
@@ -38,7 +40,10 @@ class PostDetail extends StatelessWidget {
               SizedBox(height:10),
 
               SizedBox(height:10),
-              Text(loadedProduct.content,textAlign: TextAlign.center,softWrap: true,)
+              Html(
+                data: "${loadedProduct.content}",
+
+              ),
             ]
         ),
       ),

@@ -8,7 +8,7 @@ import '../models/category_model.dart';
 import '../widgets/category_tile.dart';
 import '../utilities/networkhelper.dart';
 import '../widgets/article_tile.dart';
-import '../widgets/bottomtab.dart';
+import 'package:amcollective/widgets/bottomtab.dart';
 import '../models/article_model.dart';
 
 class BlogPage extends StatefulWidget {
@@ -79,7 +79,7 @@ class _BlogPageState extends State<BlogPage> {
   @override
   void dispose() {
     super.dispose();
-    Provider.of<SelectedCategory>(context, listen: false).resetPagenum();
+
   }
 
 /*  @override
@@ -151,10 +151,7 @@ class _BlogPageState extends State<BlogPage> {
     articlelisttoshow = categoryprovider.providerArticles;
     return NotificationListener<ScrollNotification>(
         onNotification: onNotification,
-        child: Scaffold(
-            backgroundColor: Color(0xFFEDF0F6),
-            bottomNavigationBar: BottomTab(),
-            body: ListView(
+        child:  ListView(
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -250,10 +247,11 @@ class _BlogPageState extends State<BlogPage> {
                                 );
                               }),
                           TextButton(
-                              onPressed: _pressbutton, child: Text('LOAD MORE'))
+                              onPressed: _pressbutton, child: Text('LOAD MORE')),
+                    SizedBox(height: 80,)
                         ],
                 ),
               ],
-            )));
+            ));
   }
 }
