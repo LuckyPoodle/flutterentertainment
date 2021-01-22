@@ -7,6 +7,11 @@ class Game extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.blue,);
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child:  Text('Game '),
+      ),
+    );
   }
 }
