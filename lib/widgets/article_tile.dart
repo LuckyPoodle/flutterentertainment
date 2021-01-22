@@ -85,7 +85,7 @@ class ArticleTile extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.arrow_forward),
+                    icon: Icon(Icons.menu_book),
                     iconSize: 50.0,
                     alignment: Alignment.bottomRight,
                     onPressed: () => Navigator.of(context).pushNamed(PostDetail.routeName,arguments:id),
