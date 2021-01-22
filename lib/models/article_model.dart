@@ -1,6 +1,7 @@
 class Article{
 
   String title;
+  String id;
   int author;
   String description;
   String urlToImage;
@@ -10,7 +11,7 @@ class Article{
   String articleUrl;
   String modifiedby;
 
-  Article({this.title,this.description,this.author,this.content,this.publishedAt,
+  Article({this.id,this.title,this.description,this.author,this.content,this.publishedAt,
     this.urlToImage, this.articleUrl,this.shortdesc,this.modifiedby});
 
 

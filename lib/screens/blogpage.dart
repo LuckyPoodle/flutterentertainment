@@ -11,23 +11,21 @@ import '../widgets/article_tile.dart';
 import '../widgets/bottomtab.dart';
 import '../models/article_model.dart';
 
-
 class BlogPage extends StatefulWidget {
+
+
   @override
   _BlogPageState createState() => _BlogPageState();
 }
 
 class _BlogPageState extends State<BlogPage> {
-
   ScrollController categorytilesscrollController = ScrollController();
   ScrollController postscrollController = ScrollController();
 
-  bool _loading=false;
+  bool _loading = false;
 
-  var currentcategory='Alvinology';
-  List<Article> articlelisttoshow=[];
-
-
+  var currentcategory = 'Alvinology';
+  List<Article> articlelisttoshow = [];
 
 //  void getArticles(int page) async {
 //    String pagenumber=page.toString();
@@ -59,39 +57,45 @@ class _BlogPageState extends State<BlogPage> {
 //
 //  }
 
-
   @override
   void initState() {
-
     // TODO: implement initState
     super.initState();
-    _loading=true;
+    _loading = true;
     print("init");
 
-
-    Provider.of<SelectedCategory>(context,listen: false).fetchArticles().then((value){
+    Provider.of<SelectedCategory>(context, listen: false)
+        .fetchArticles()
+        .then((value) {
       print("heyy");
       print(value);
       setState(() {
-        articlelisttoshow=value;
-        _loading=false;
+        articlelisttoshow = value;
+        _loading = false;
       });
-
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    Provider.of<SelectedCategory>(context,listen: false).resetPagenum();
+    Provider.of<SelectedCategory>(context, listen: false).resetPagenum();
   }
-  @override
+
+/*  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    currentcategory=Provider.of<SelectedCategory>(context).category;
+    currentcategory = Provider.of<SelectedCategory>(context).category;
+    _loading=true;
+    Provider.of<SelectedCategory>(context,listen: false).fetchArticles().then((_){
+      setState(() {
+        _loading=false;
+      });
+    });
+
 
     super.didChangeDependencies();
-  }
+  }*/
 
 //  void scrolllistener(){
 //        if (categorytilesscrollController.positions.length>0 && postscrollController.position.extentAfter==0.0){
@@ -102,154 +106,154 @@ class _BlogPageState extends State<BlogPage> {
 //
 //  }
 
-
-  bool onNotification (ScrollNotification notification){
-
-
+  bool onNotification(ScrollNotification notification) {
     if (categorytilesscrollController.hasClients) {
-      if (categorytilesscrollController.positions.length > 0 ) {
+      if (categorytilesscrollController.positions.length > 0) {
         print('CATEGORY!!');
         print(categorytilesscrollController.position);
       }
     }
-    if (postscrollController.hasClients){
-      if (notification is ScrollUpdateNotification ){
+    if (postscrollController.hasClients) {
+      if (notification is ScrollUpdateNotification) {
         print('is update!!!!!!!!!!!');
       }
       print('hYEYEE');
 
-      if (postscrollController.positions.length>0 ){
-        if(notification.metrics.pixels==notification.metrics.maxScrollExtent){
+      if (postscrollController.positions.length > 0) {
+        if (notification.metrics.pixels ==
+            notification.metrics.maxScrollExtent) {
           print('REAHED POOST ENDDDDDD!!');
-
-
 
           //currentPage+=1;
 //          getArticles(currentPage+1);
 //          currentPage+=1;
         }
-    }
+      }
     }
 
     return true;
   }
 
-  void _pressbutton(){
-    Provider.of<SelectedCategory>(context,listen: false).addPagenum();
+  void _pressbutton() {
+    Provider.of<SelectedCategory>(context, listen: false).addPagenum();
     print("current page now pres sbutton become ");
-    print(Provider.of<SelectedCategory>(context,listen: false).currentpagenumber);
-    Provider.of<SelectedCategory>(context,listen: false).fetchArticles();
+    print(Provider.of<SelectedCategory>(context, listen: false)
+        .currentpagenumber);
+    Provider.of<SelectedCategory>(context, listen: false).fetchArticles();
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     //listener
-    final categoryprovider=Provider.of<SelectedCategory>(context);
-    List<CategoryModel> categories=categoryprovider.categories;
+    final categoryprovider = Provider.of<SelectedCategory>(context);
+    List<CategoryModel> categories = categoryprovider.categories;
 
-    articlelisttoshow=categoryprovider.providerArticles;
-    return
-      NotificationListener<ScrollNotification>(
-          onNotification:onNotification,
-          child:
-          Scaffold(
-
-              backgroundColor: Color(0xFFEDF0F6),
-          bottomNavigationBar: BottomTab(),
-          body:ListView(
-            children: <Widget>[
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                  children: <Widget>[
-                    Text(
-                      'Instagram',
-                      style: TextStyle(
-                        fontFamily: 'Billabong',
-                        fontSize: 32.0,
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.live_tv),
-                          iconSize: 30.0,
-                          onPressed: () => print('IGTV'),
+    articlelisttoshow = categoryprovider.providerArticles;
+    return NotificationListener<ScrollNotification>(
+        onNotification: onNotification,
+        child: Scaffold(
+            backgroundColor: Color(0xFFEDF0F6),
+            bottomNavigationBar: BottomTab(),
+            body: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Instagram',
+                        style: TextStyle(
+                          fontFamily: 'Billabong',
+                          fontSize: 32.0,
                         ),
-                        SizedBox(width: 16.0),
-                        Container(
-                          width: 35.0,
-                          child: IconButton(
-                            icon: Icon(Icons.send),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.live_tv),
                             iconSize: 30.0,
-                            onPressed: () => print('Direct Messages'),
+                            onPressed: () => print('IGTV'),
                           ),
-                        )
-                      ],
-                    )
-                  ],
+                          SizedBox(width: 16.0),
+                          Container(
+                            width: 35.0,
+                            child: IconButton(
+                              icon: Icon(Icons.send),
+                              iconSize: 30.0,
+                              onPressed: () => print('Direct Messages'),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  height: 70,
+                  child: ListView.builder(
+                      controller: categorytilesscrollController,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: (){
+                            _loading=true;
 
-              Container(
+                          Provider.of<SelectedCategory>(context, listen: false).changeCategory();
+                          categoryprovider.fetchArticles().then((_){
+                            _loading=false;
+                          });
+                          print('tapped!!');
+                          print( Provider.of<SelectedCategory>(context, listen: false).category);
 
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                height: 70,
-                child: ListView.builder(
-                    controller: categorytilesscrollController,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      return CategoryCard(
-                        imageAssetUrl: categories[index].imageAssetUrl,
-                        categoryName: categories[index].categoryName,
-                      );
+                        },
 
-                    }),
-              ),
-
-        Column(
-          children: _loading
-              ? <Widget>[Center(
-            child: CircularProgressIndicator(),
-          )]
-              :
-
-        <Widget>[ListView.builder(
-                itemCount:articlelisttoshow.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                controller: postscrollController,
-                itemBuilder: (context, index) {
-                  return ArticleTile(
-                    date:articlelisttoshow[index].publishedAt??"",
-                    imgUrl: articlelisttoshow[index].urlToImage ?? "",
-                    title: articlelisttoshow[index].title ?? "",
-                    desc: articlelisttoshow[index].shortdesc ?? "",
-                    content: articlelisttoshow[index].content ?? "",
-                    posturl: articlelisttoshow[index].articleUrl ?? "",
-                    modifiedby: articlelisttoshow[index].modifiedby??"",
-
-                  );
-                }),
-
-          TextButton(onPressed: _pressbutton, child: Text('LOAD MORE'))
-
-
-
-        ],
-          ),
-
-
-
-
-            ],
-          )));
+                          child: CategoryCard(
+                            imageAssetUrl: categories[index].imageAssetUrl,
+                            categoryName: categories[index].categoryName,
+                          ),
+                        );
+                      }),
+                ),
+                Column(
+                  children: _loading
+                      ? <Widget>[
+                          Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        ]
+                      : <Widget>[
+                          ListView.builder(
+                              itemCount: articlelisttoshow.length,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(),
+                              controller: postscrollController,
+                              itemBuilder: (context, index) {
+                                return ArticleTile(
+                                  id:articlelisttoshow[index].id,
+                                  date: articlelisttoshow[index].publishedAt ??
+                                      "",
+                                  imgUrl:
+                                      articlelisttoshow[index].urlToImage ?? "",
+                                  title: articlelisttoshow[index].title ?? "",
+                                  desc:
+                                      articlelisttoshow[index].shortdesc ?? "",
+                                  content:
+                                      articlelisttoshow[index].content ?? "",
+                                  posturl:
+                                      articlelisttoshow[index].articleUrl ?? "",
+                                  modifiedby:
+                                      articlelisttoshow[index].modifiedby ?? "",
+                                );
+                              }),
+                          TextButton(
+                              onPressed: _pressbutton, child: Text('LOAD MORE'))
+                        ],
+                ),
+              ],
+            )));
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../screens/PostDetail.dart';
 
 class ArticleTile extends StatelessWidget {
   final String imgUrl, title, desc,content,posturl,date,modifiedby;
+  final String id;
 
-  ArticleTile({this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
+  ArticleTile({this.id,this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +88,7 @@ class ArticleTile extends StatelessWidget {
                     icon: Icon(Icons.arrow_forward),
                     iconSize: 50.0,
                     alignment: Alignment.bottomRight,
-                    onPressed: () => print('Read More'),
+                    onPressed: () => Navigator.of(context).pushNamed(PostDetail.routeName,arguments:id),
                   ),
                 ],
               ),

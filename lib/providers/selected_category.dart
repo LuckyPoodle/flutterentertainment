@@ -13,6 +13,13 @@ class SelectedCategory with ChangeNotifier{
   int currentpagenumber=1;
   List<CategoryModel> categories = [CategoryModel('Alvinology','https://media.alvinology.com/uploads/2020/11/am-logo-new%402x.png'),CategoryModel('Lemon-Film','https://cdn.britannica.com/84/188484-050-F27B0049/lemons-tree.jpg')];
 
+  Article findById(String id){
+
+    return providerArticles.firstWhere((prod) => prod.id==id);
+  }
+
+
+
   void addPagenum(){
     currentpagenumber++;
     print("currentpagenumber is now ");
@@ -41,8 +48,6 @@ class SelectedCategory with ChangeNotifier{
     }
 
     providerArticles.clear();
-
-    fetchArticles();
 
     notifyListeners();
   }

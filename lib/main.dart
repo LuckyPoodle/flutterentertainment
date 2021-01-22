@@ -2,7 +2,7 @@ import 'package:amcollective/screens/blogpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/selected_category.dart';
-
+import 'screens/PostDetail.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,6 +26,9 @@ class MyApp extends StatelessWidget {
 
       ),
       home: BlogPage(),
+      routes: {
+        PostDetail.routeName:(ctx)=>PostDetail()
+      },
     ),
     );
   }

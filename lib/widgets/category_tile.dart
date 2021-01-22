@@ -11,17 +11,7 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var currentcategory=Provider.of<SelectedCategory>(context).category;
-    return GestureDetector(
-      onTap: (){
-
-        Provider.of<SelectedCategory>(context, listen: false).changeCategory();
-        print('tapped!!');
-
-        print( Provider.of<SelectedCategory>(context, listen: false).category);
-
-      },
-
-      child:Container(
+    return Container(
         width: MediaQuery.of(context).size.width / 2,
         margin: EdgeInsets.only(right: 5),
         child: Stack(
@@ -54,8 +44,7 @@ class CategoryCard extends StatelessWidget {
             )
           ],
         ),
-      ),
-    );
+      );
 
 
 
