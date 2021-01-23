@@ -53,7 +53,7 @@ class NetworkHelper {
   }
 
 
-  Future<void> getData() async {
+  Future<void> getData(String blogname) async {
     print('fetching data');
     print(url);
     Response response = await get(url,headers: {"Accept":"application/json"});
@@ -70,17 +70,27 @@ class NetworkHelper {
         String shortdescc=parseHtml(decodedData[i]['excerpt']['rendered']);
         //String contentt=parseHtml(decodedData[i]['content']['rendered']);
         String id=decodedData[i]['id'].toString();
+        print("FETCHING!!!!! , imgrul ");
+        print(decodedData[i]['jetpack_featured_media_url']);
+        String urlimage='';
+        if (decodedData[i]['jetpack_featured_media_url']==null){
+          urlimage="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png";
+        }else{
+          urlimage=decodedData[i]['jetpack_featured_media_url'];
+        }
+        blogname=blogname;
 
         Article article=Article(
           id:id,
           title:titlee,
-          urlToImage: decodedData[i]['jetpack_featured_media_url'],
+          urlToImage:urlimage,
           content: decodedData[i]['content']['rendered'],
           shortdesc:shortdescc,
           articleUrl: decodedData[i]['link'],
           author: decodedData[i]['author'],
             publishedAt: date,
-            modifiedby: decodedData[i]['modified_by']
+            modifiedby: decodedData[i]['modified_by'],
+          blogname: blogname
 
         );
         listofarticlescurrent.add(article);
