@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import '../screens/PostDetail.dart';
 
 class ArticleTile extends StatelessWidget {
-  final String imgUrl, title, desc,content,posturl,date,modifiedby;
+  final String imgUrl, title, desc,content,posturl,date,modifiedby,blogname;
   final String id;
 
-  ArticleTile({this.id,this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
+  ArticleTile({this.blogname,this.id,this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
 
   @override
   Widget build(BuildContext context) {
+    bool hasAuthor=modifiedby.isNotEmpty;
     return Material(
         child:Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -28,7 +29,7 @@ class ArticleTile extends StatelessWidget {
                   ListTile(
 
                     title: Text(
-                      modifiedby,
+                      hasAuthor?modifiedby:blogname,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -52,7 +53,6 @@ class ArticleTile extends StatelessWidget {
                         image: DecorationImage(
                           image:NetworkImage(
                             imgUrl,
-
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -60,26 +60,29 @@ class ArticleTile extends StatelessWidget {
                     ),
 
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
+                        SizedBox(
+                          height: 6,
+                        ),
 
                         Text(
                           title,
-                          maxLines: 2,
+                          maxLines: 5,
                           style: TextStyle(
                               color: Colors.black87,
-                              fontSize: 20,
+                              fontSize: 30,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
-                          height: 4,
+                          height: 6,
                         ),
                         Text(
-                          desc,
-                          maxLines: 2,
-                          style: TextStyle(color: Colors.black54, fontSize: 14),
+                          blogname=='RiceMedia'?'':desc,
+                          maxLines: 10,
+                          style: TextStyle(color: Colors.black54, fontSize: 20),
                         ),
                       ],
                     ),

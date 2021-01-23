@@ -7,6 +7,11 @@ class Deals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.yellow,);
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child:  Text('Deals '),
+      ),
+    );
   }
 }

@@ -17,15 +17,7 @@ class CategoryCard extends StatelessWidget {
         child: Stack(
           children: <Widget>[
 
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                imageAssetUrl,
-                height: 60,
-                width: 120,
-                fit: BoxFit.cover,
-              ),
-            ),
+
             Container(
               alignment: Alignment.center,
               height: 60,

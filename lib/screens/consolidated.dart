@@ -53,11 +53,15 @@ class _ConsolidatedState extends State<Consolidated> {
       if (_start < 1) {
         timer.cancel();
         print('move to next feature and reStart');
-        _pageController.animateToPage(_pageController.page == 2.0 ? 0 : _pageController.page.toInt()+1, duration: Duration(seconds:1), curve: Curves.ease);
+        print('now pagecontroller.page..');
+        print(_pageController.page);
+        _pageController.animateToPage(_pageController.page == 5.0 ? 0 : _pageController.page.toInt()+1, duration: Duration(seconds:1), curve: Curves.ease);
         _startTimer();
       } else {
         _start = _start - 1;
         print('current time is $_start');
+        print('current page is ');
+        print(_pageController.page);
       }
       // });
     });
@@ -145,7 +149,7 @@ class _ConsolidatedState extends State<Consolidated> {
               child: Container(
                   width: 220,
                   height: 120,
-                  child:  Image.network(data.imageAssetUrl,fit: BoxFit.cover),
+                  child:  Image.asset(data.imageAssetUrl,fit: BoxFit.cover),
               ),
             ),
 
@@ -194,7 +198,7 @@ class _ConsolidatedState extends State<Consolidated> {
                       child: SmoothPageIndicator(
                         controller: _pageController,
                         count: categorieslist.length,
-                        effect: ExpandingDotsEffect(expansionFactor: 4,),
+                        effect: ExpandingDotsEffect(expansionFactor: 2,),
                       ),
                     ),
                   ),

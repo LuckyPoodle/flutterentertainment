@@ -65,6 +65,7 @@ class NetworkHelper {
 
         //DateTime dt=DateTime.parse(decodedData[i]['modified']);
         String date=TimeAgo.timeAgoSinceDate(decodedData[i]['modified']);
+        DateTime dateforcomparison=DateTime.parse(decodedData[i]['modified']);
 
         String titlee=parseHtml(decodedData[i]['title']['rendered']);
         String shortdescc=parseHtml(decodedData[i]['excerpt']['rendered']);
@@ -82,6 +83,7 @@ class NetworkHelper {
 
         Article article=Article(
           id:id,
+          dateforcomparison: dateforcomparison,
           title:titlee,
           urlToImage:urlimage,
           content: decodedData[i]['content']['rendered'],

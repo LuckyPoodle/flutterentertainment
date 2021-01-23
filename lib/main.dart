@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           PostDetail.routeName:(ctx)=>PostDetail(),
           Deals.routeName:(ctx)=>Deals(),
+          BlogPage.routeName:(ctx)=>BlogPage(),
         },
       ),
       );

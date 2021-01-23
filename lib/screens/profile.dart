@@ -7,6 +7,11 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.blueGrey,);
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child:  Text('Profile '),
+      ),
+    );
   }
 }

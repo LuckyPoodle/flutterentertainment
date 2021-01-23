@@ -1,12 +1,15 @@
+import 'package:amcollective/screens/consolidated.dart';
 import 'package:amcollective/screens/deals.dart';
 import 'package:flutter/material.dart';
-import 'package:flashy_tab_bar/flashy_tab_bar.dart';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:provider/provider.dart';
 import '../providers/selected_category.dart';
 import '../screens/blogpage.dart';
 import '../screens/game.dart';
 import '../screens/profile.dart';
+import '../widgets/drawer.dart';
+
 class TabsScreen extends StatefulWidget {
 
   TabsScreen();
@@ -23,7 +26,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void initState() {
     _pages = [
       {
-        'page': BlogPage(),
+        'page': Consolidated(),
         'title': 'Blog Posts',
       },
       {
@@ -52,7 +55,30 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     int _page = 0;
     GlobalKey _bottomNavigationKey = GlobalKey();
+    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
+
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu,color: Colors.white,),
+          onPressed: () {
+            _scaffoldKey.currentState.openDrawer();
+          },
+        ),
+          flexibleSpace: Container(
+            alignment: Alignment.center,
+            color: Colors.black
+            ,
+            child: Text('AMCOLLECTIVE',style: TextStyle(
+              color: Colors.white,
+              letterSpacing: 5.0,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold
+            ),),
+          )
+      ),
 
       body: Stack(children: <Widget> [
         _pages[_selectedPageIndex]['page'],
@@ -60,7 +86,7 @@ class _TabsScreenState extends State<TabsScreen> {
         Positioned(left:0,right:0,bottom:0,child: CurvedNavigationBar(
           key: _bottomNavigationKey,
           index: _selectedPageIndex,
-          height: 50.0,
+          height: 60.0,
           items: <Widget>[
         Icon(Icons.dashboard, size: 30,color: Colors.white,),
         Icon(Icons.star, size: 30,color: Colors.white,),
@@ -174,4 +200,14 @@ class _TabsScreenState extends State<TabsScreen> {
 //              title: Text(''),
 //            ),
 //          ],
-//        ));
+//        ))
+
+
+//decoration: BoxDecoration(
+//gradient: LinearGradient(
+//colors: [Colors.blueGrey, Colors.black],
+//begin: Alignment.bottomRight,
+//end: Alignment.topLeft,
+//),
+//
+//)
