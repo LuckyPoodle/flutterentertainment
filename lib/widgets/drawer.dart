@@ -1,3 +1,4 @@
+import 'package:amcollective/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -17,9 +18,10 @@ class AppDrawer extends StatelessWidget {
               title: Text('Login/Register'),
               onTap: () {
                 //
-                Navigator.of(context).pushReplacementNamed('/');
+                Navigator.of(context).pushNamed(AuthScreen.routeName);
               },
             ),
+           
             Divider(),
 
           ],

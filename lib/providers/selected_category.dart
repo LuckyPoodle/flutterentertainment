@@ -11,7 +11,7 @@ class SelectedCategory with ChangeNotifier{
   List<Article> providerArticles=[];
   List<Article> combinedArticles=[];
   List<Article> latestArticlefromEachBlog=[];
-  var numberofstoredarticles=0;
+
   int currentpagenumber=1;
   String screenlocation='consolidated';
   List<CategoryModel> categories =
@@ -99,10 +99,6 @@ class SelectedCategory with ChangeNotifier{
 
 
 
-  void storeArticles(List<Article> articlelist){
-    providerArticles.addAll(articlelist);
-    numberofstoredarticles+=articlelist.length;
-  }
 
 
   Future<List<Article>> fetchFromAllBlog(bool nextpage) async{
@@ -141,7 +137,7 @@ class SelectedCategory with ChangeNotifier{
     }
 
     //from sethlui
-    NetworkHelper networkHelper4=NetworkHelper('https://sethlui.com/wp-json/wp/v2/posts?page=$pagenumber');
+    NetworkHelper networkHelper4=NetworkHelper('https://sethlui.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
     await networkHelper4.getData('SethLui');
 
     templist.addAll(networkHelper4.listofarticlescurrent);
@@ -151,7 +147,7 @@ class SelectedCategory with ChangeNotifier{
 
 
     //from mylovelyblueskies
-    NetworkHelper networkHelper5=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber');
+    NetworkHelper networkHelper5=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
     await networkHelper5.getData('My Lovely Blue Sky');
 
     templist.addAll(networkHelper5.listofarticlescurrent);
@@ -161,7 +157,7 @@ class SelectedCategory with ChangeNotifier{
 
 
     //Salary.sg
-    NetworkHelper networkHelper6=NetworkHelper('https://www.salary.sg//wp-json/wp/v2/posts?page=$pagenumber');
+    NetworkHelper networkHelper6=NetworkHelper('https://www.salary.sg//wp-json/wp/v2/posts?page=$pagenumber&_embed');
     await networkHelper6.getData('Salary.sg');
 
     templist.addAll(networkHelper6.listofarticlescurrent);
@@ -195,14 +191,14 @@ class SelectedCategory with ChangeNotifier{
     }
     String pagenumber=currentpagenumber.toString();
 
-    print('category is ...........');
-    print(category);
+   // print('category is ...........');
+    //print(category);
 
 
     if (category=='Alvinology'){
-      print("fetching from Alvinology");
-      print("page");
-      print(pagenumber);
+     // print("fetching from Alvinology");
+    //  print("page");
+     // print(pagenumber);
       NetworkHelper networkHelper=NetworkHelper('https://alvinology.com/wp-json/wp/v2/posts?page=$pagenumber');
       await networkHelper.getData('Alvinology');
 
@@ -214,8 +210,8 @@ class SelectedCategory with ChangeNotifier{
 
 
     }else if (category=='Lemon-Film'){
-      print("fetching from another blog!!!!------");
-      print("page");
+     // print("fetching from another blog!!!!------");
+     // print("page");
       print(pagenumber);
       NetworkHelper networkHelper=NetworkHelper('https://lemon-film.com/wp-json/wp/v2/posts?page=$pagenumber');
       await networkHelper.getData('Lemon-Film');
@@ -230,15 +226,15 @@ class SelectedCategory with ChangeNotifier{
       await networkHelper.getData('RiceMedia');
       providerArticles.addAll(networkHelper.listofarticlescurrent);
     }else if (category=='SethLui'){
-      NetworkHelper networkHelper=NetworkHelper('https://sethlui.com/wp-json/wp/v2/posts?page=$pagenumber');
+      NetworkHelper networkHelper=NetworkHelper('https://sethlui.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
       await networkHelper.getData('SethLui');
       providerArticles.addAll(networkHelper.listofarticlescurrent);
     }else if (category=='My Lovely Blue Sky'){
-      NetworkHelper networkHelper=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber');
+      NetworkHelper networkHelper=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
       await networkHelper.getData('My Lovely Blue Sky');
       providerArticles.addAll(networkHelper.listofarticlescurrent);
     }else if (category=='Salary.sg'){
-      NetworkHelper networkHelper=NetworkHelper('https://www.salary.sg/wp-json/wp/v2/posts?page=$pagenumber');
+      NetworkHelper networkHelper=NetworkHelper('https://www.salary.sg/wp-json/wp/v2/posts?page=$pagenumber&_embed');
       await networkHelper.getData('Salary.sg');
       providerArticles.addAll(networkHelper.listofarticlescurrent);
     }

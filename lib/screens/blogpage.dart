@@ -66,26 +66,31 @@ class _BlogPageState extends State<BlogPage> {
     _loading = true;
     print("init");
 
-    Provider.of<SelectedCategory>(context, listen: false)
-        .fetchArticles(false)
-        .then((value) {
-      print("heyy");
-      print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print("++++++++++++++++++++++++++++++++init state++++++++++++++++++++++++++++++++++");
-      print(value);
-      setState(() {
-        //articlelisttoshow = value;
-        _loading = false;
+
+
+      Provider.of<SelectedCategory>(context, listen: false)
+          .fetchArticles(false)
+          .then((value) {
+        print("heyy");
+        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        print("++++++++++++++++++++++++++++++++init state++++++++++++++++++++++++++++++++++");
+        print(value);
+        setState(() {
+          //articlelisttoshow = value;
+          _loading = false;
+        });
+        //Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
       });
-      Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
-    });
+
+
   }
 
   @override
   void dispose() {
     super.dispose();
     print('dispose');
+    
 
 
   }
@@ -164,65 +169,67 @@ class _BlogPageState extends State<BlogPage> {
 
 
     articlelisttoshow = categoryprovider.providerArticles;
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title:Text(Provider.of<SelectedCategory>(context, listen: false).category)
-      ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: true,
+            title:Text(Provider.of<SelectedCategory>(context, listen: false).category)
+        ),
 
-      body: ListView(
-        children: <Widget>[
-          Column(
+        body: ListView(
+          children: <Widget>[
+            Column(
 
-            children: _loading
-                ? <Widget>[
-              SizedBox(height:100.0),
-              Center(
-                child: SpinKitChasingDots(
-                  color:Colors.black,
-                  size: 100.0,
-                ),
-              )
-            ]
-                : <Widget>[
-              ListView.builder(
-                  itemCount: articlelisttoshow.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  controller: postscrollController,
-                  itemBuilder: (context, index) {
-                    return ArticleTile(
-                      id:articlelisttoshow[index].id,
-                      blogname: articlelisttoshow[index].blogname,
-                      date: articlelisttoshow[index].publishedAt ??
-                          "",
-                      imgUrl:
-                      articlelisttoshow[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
-                      title: articlelisttoshow[index].title ?? "",
-                      desc:
-                      articlelisttoshow[index].shortdesc ?? "",
-                      content:
-                      articlelisttoshow[index].content ?? "",
-                      posturl:
-                      articlelisttoshow[index].articleUrl ?? "",
-                      modifiedby:
-                      articlelisttoshow[index].modifiedby ?? "",
-                    );
-                  }),
-              TextButton(style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.black,
-                  textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
-                  onPressed: _pressbutton, child: Text('LOAD MORE')),
-              SizedBox(height: 10,),
-              _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
+              children: _loading
+                  ? <Widget>[
+                SizedBox(height:100.0),
+                Center(
+                  child: SpinKitChasingDots(
+                    color:Colors.black,
+                    size: 100.0,
+                  ),
+                )
+              ]
+                  : <Widget>[
+                ListView.builder(
+                    itemCount: articlelisttoshow.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    controller: postscrollController,
+                    itemBuilder: (context, index) {
+                      return ArticleTile(
+                        id:articlelisttoshow[index].id,
+                        blogname: articlelisttoshow[index].blogname,
+                        date: articlelisttoshow[index].publishedAt ??
+                            "",
+                        imgUrl:
+                        articlelisttoshow[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
+                        title: articlelisttoshow[index].title ?? "",
+                        desc:
+                        articlelisttoshow[index].shortdesc ?? "",
+                        content:
+                        articlelisttoshow[index].content ?? "",
+                        posturl:
+                        articlelisttoshow[index].articleUrl ?? "",
+                        modifiedby:
+                        articlelisttoshow[index].modifiedby ?? "",
+                      );
+                    }),
+                TextButton(style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    backgroundColor: Colors.black,
+                    textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
+                    onPressed: _pressbutton, child: Text('LOAD MORE')),
+                SizedBox(height: 10,),
+                _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
 
 
-              SizedBox(height: 80,)
-            ],
-          ),
-        ],
+                SizedBox(height: 80,)
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

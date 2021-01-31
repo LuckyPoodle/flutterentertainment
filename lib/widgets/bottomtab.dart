@@ -1,5 +1,6 @@
 import 'package:amcollective/screens/consolidated.dart';
 import 'package:amcollective/screens/deals.dart';
+import 'package:amcollective/screens/games_overall.dart';
 import 'package:flutter/material.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -11,8 +12,12 @@ import '../screens/profile.dart';
 import '../widgets/drawer.dart';
 
 class TabsScreen extends StatefulWidget {
+  static const routeName = '/';
+  int myselectedpage=0;
 
-  TabsScreen();
+  TabsScreen(this.myselectedpage);
+
+
 
   @override
   _TabsScreenState createState() => _TabsScreenState();
@@ -20,7 +25,7 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   List<Map<String, Object>> _pages;
-  int _selectedPageIndex = 0;
+ // int _selectedPageIndex = 0;
 
   @override
   void initState() {
@@ -34,8 +39,8 @@ class _TabsScreenState extends State<TabsScreen> {
         'title': 'Deals',
       },
       {
-        'page':Game() ,
-        'title': 'game',
+        'page':GamesOverallScreen() ,
+        'title': 'Game',
       },
       {
         'page':Profile() ,
@@ -47,7 +52,8 @@ class _TabsScreenState extends State<TabsScreen> {
 
   void _selectPage(int index) {
     setState(() {
-      _selectedPageIndex = index;
+      widget.myselectedpage=index;
+      //_selectedPageIndex = index;
     });
   }
 
@@ -81,11 +87,11 @@ class _TabsScreenState extends State<TabsScreen> {
       ),
 
       body: Stack(children: <Widget> [
-        _pages[_selectedPageIndex]['page'],
+        _pages[widget.myselectedpage]['page'],
 
         Positioned(left:0,right:0,bottom:0,child: CurvedNavigationBar(
           key: _bottomNavigationKey,
-          index: _selectedPageIndex,
+          index: widget.myselectedpage,
           height: 60.0,
           items: <Widget>[
         Icon(Icons.dashboard, size: 30,color: Colors.white,),

@@ -37,13 +37,33 @@ class _ConsolidatedState extends State<Consolidated> {
       _timer.cancel();
       _startTimer();
     });
-    Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(false).then((_){
+    if (Provider.of<SelectedCategory>(context, listen: false).combinedArticles.length>0){
+      print("not first visit!!!!!!!");
+      print(Provider.of<SelectedCategory>(context, listen: false).combinedArticles.length);
       setState(() {
         _loading=false;
       });
-    });
+
+    }else{
+      Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(false).then((_){
+        setState(() {
+          _loading=false;
+        });
+      });
+    }
+
     Provider.of<SelectedCategory>(context, listen: false).updateLocation('consolidated');
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+ 
+    _timer.cancel();
+    _pageController.dispose();
+    
+       super.dispose();
   }
 
   void _startTimer() {
@@ -52,16 +72,16 @@ class _ConsolidatedState extends State<Consolidated> {
       // setState(() {
       if (_start < 1) {
         timer.cancel();
-        print('move to next feature and reStart');
-        print('now pagecontroller.page..');
-        print(_pageController.page);
+      //  print('move to next feature and reStart');
+      //  print('now pagecontroller.page..');
+       // print(_pageController.page);
         _pageController.animateToPage(_pageController.page == 5.0 ? 0 : _pageController.page.toInt()+1, duration: Duration(seconds:1), curve: Curves.ease);
         _startTimer();
       } else {
         _start = _start - 1;
-        print('current time is $_start');
-        print('current page is ');
-        print(_pageController.page);
+      //  print('current time is $_start');
+      //  print('current page is ');
+       //print(_pageController.page);
       }
       // });
     });
@@ -85,6 +105,18 @@ class _ConsolidatedState extends State<Consolidated> {
     Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(true).then((_){
       setState(() {
         _pressloadmore=false;
+      });
+    });
+  }
+
+  Future<void> _refreshConsolidatedpage(BuildContext context) async {
+    setState(() {
+      _loading=true;
+    });
+
+    await Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(true).then((_){
+      setState(() {
+        _loading=false;
       });
     });
   }
@@ -173,102 +205,106 @@ class _ConsolidatedState extends State<Consolidated> {
           size: 100.0,
         ),
       ) :
-      ListView(
-          padding: const EdgeInsets.all(2.0),
+      RefreshIndicator(
+        onRefresh: ()=>_refreshConsolidatedpage(context),
 
-          shrinkWrap: true,
-          physics: AlwaysScrollableScrollPhysics(),
-          children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: 20,),
-                Container(
-                  width: size.width,
-                  height: 210,
-                  child: PageView(
-                    controller: _pageController,
-                    children: featureSection.map(_featureItem).toList(),
-                    //List<Widget>.generate(3,(index) => _featureItem('images/Feature${index+1}.png')).toList(),
-                  ),
-                ), Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                      child: SmoothPageIndicator(
-                        controller: _pageController,
-                        count: categorieslist.length,
-                        effect: ExpandingDotsEffect(expansionFactor: 2,),
+        child: ListView(
+            padding: const EdgeInsets.all(2.0),
+
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 20,),
+                  Container(
+                    width: size.width,
+                    height: 210,
+                    child: PageView(
+                      controller: _pageController,
+                      children: featureSection.map(_featureItem).toList(),
+                      //List<Widget>.generate(3,(index) => _featureItem('images/Feature${index+1}.png')).toList(),
+                    ),
+                  ), Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        child: SmoothPageIndicator(
+                          controller: _pageController,
+                          count: categorieslist.length,
+                          effect: ExpandingDotsEffect(expansionFactor: 2,),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Blogs',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
-                ),
-                Container(
-                  height: 200,
-                  child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: categorieslist.map(_categoriesItems).toList()
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Blogs',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
                   ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Latest Posts',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
-                ),
-
-                ListView(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  children: <Widget>[
-                    Column(
-                      children:
-                      <Widget>[
-                        ListView.builder(
-                            itemCount: allthearticles.length,
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            physics: ScrollPhysics(),
-
-                            itemBuilder: (context, index) {
-                              return ArticleTile(
-                                id:allthearticles[index].id,
-                                blogname: allthearticles[index].blogname,
-                                date: allthearticles[index].publishedAt ??
-                                    "",
-                                imgUrl:
-                                allthearticles[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
-                                title: allthearticles[index].title ?? "",
-                                desc:
-                                allthearticles[index].shortdesc ?? "",
-                                content:
-                                allthearticles[index].content ?? "",
-                                posturl:
-                                allthearticles[index].articleUrl ?? "",
-                                modifiedby:
-                                allthearticles[index].modifiedby ?? "",
-                              );
-                            }),
-                        TextButton(style: TextButton.styleFrom(
-                            primary: Colors.white,
-                            backgroundColor: Colors.black,
-                            textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
-                            onPressed: _pressbutton, child: Text('LOAD MORE')),
-                        SizedBox(height: 10,),
-                        _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
-                        SizedBox(height: 80,)
-                      ],
+                  Container(
+                    height: 200,
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: categorieslist.map(_categoriesItems).toList()
                     ),
-                  ],
-                )
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Latest Posts',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+                  ),
+
+                  ListView(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    children: <Widget>[
+                      Column(
+                        children:
+                        <Widget>[
+                          ListView.builder(
+                              itemCount: allthearticles.length,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(),
+
+                              itemBuilder: (context, index) {
+                                return ArticleTile(
+                                  id:allthearticles[index].id,
+                                  blogname: allthearticles[index].blogname,
+                                  date: allthearticles[index].publishedAt ??
+                                      "",
+                                  imgUrl:
+                                  allthearticles[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
+                                  title: allthearticles[index].title ?? "",
+                                  desc:
+                                  allthearticles[index].shortdesc ?? "",
+                                  content:
+                                  allthearticles[index].content ?? "",
+                                  posturl:
+                                  allthearticles[index].articleUrl ?? "",
+                                  modifiedby:
+                                  allthearticles[index].modifiedby ?? "",
+                                );
+                              }),
+                          TextButton(style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.black,
+                              textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
+                              onPressed: _pressbutton, child: Text('LOAD MORE')),
+                          SizedBox(height: 10,),
+                          _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
+                          SizedBox(height: 80,)
+                        ],
+                      ),
+                    ],
+                  )
 
 
-              ],
-            ),
-          ]),
+                ],
+              ),
+            ]),
+      )
     );
   }
 }

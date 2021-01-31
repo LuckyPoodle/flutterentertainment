@@ -54,8 +54,8 @@ class NetworkHelper {
 
 
   Future<void> getData(String blogname) async {
-    print('fetching data');
-    print(url);
+    //print('fetching data');
+    //print(url);
     Response response = await get(url,headers: {"Accept":"application/json"});
     if (response.statusCode == 200) {
       String data = response.body;
@@ -71,11 +71,11 @@ class NetworkHelper {
         String shortdescc=parseHtml(decodedData[i]['excerpt']['rendered']);
         //String contentt=parseHtml(decodedData[i]['content']['rendered']);
         String id=decodedData[i]['id'].toString();
-        print("FETCHING!!!!! , imgrul ");
-        print(decodedData[i]['jetpack_featured_media_url']);
+        //print("FETCHING!!!!! , imgrul ");
+        //print(decodedData[i]['jetpack_featured_media_url']);
         String urlimage='';
         if (decodedData[i]['jetpack_featured_media_url']==null){
-          urlimage="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png";
+          urlimage=decodedData[i]['_embedded']['wp:featuredmedia'][0]['source_url'];
         }else{
           urlimage=decodedData[i]['jetpack_featured_media_url'];
         }
