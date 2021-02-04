@@ -58,6 +58,7 @@ dependencies:
   firebase_performance: ^0.5.0
 
   rxdart: ^0.25.0
+  firebase_admin: ^0.1.4
 
 
   curved_navigation_bar: ^0.3.7

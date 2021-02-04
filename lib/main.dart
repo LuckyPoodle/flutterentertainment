@@ -1,3 +1,4 @@
+import 'package:amcollective/providers/roleprovider.dart';
 import 'package:amcollective/screens/auth_screen.dart';
 import 'package:amcollective/screens/blogpage.dart';
 import 'package:amcollective/screens/game.dart';
@@ -12,7 +13,8 @@ import 'screens/deals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import './utilities/authservice.dart';
-
+import 'models/appuser.dart';
+import 'providers/roleprovider.dart';
 //void main() => runApp(MyApp());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +32,10 @@ class MyApp extends StatelessWidget {
               create:(ctx)=>SelectedCategory()
           ),
           StreamProvider<User>.value(value: AuthService().user),
+          /////
+          ChangeNotifierProvider(
+              create:(ctx)=>RoleProvider()
+          ),
 
         ],child: MaterialApp(
 
@@ -38,6 +44,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.white,
           accentColor: Colors.black,
+          buttonColor: Colors.black,
           fontFamily: 'Lato',
 
         ),

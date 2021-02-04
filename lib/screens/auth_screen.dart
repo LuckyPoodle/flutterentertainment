@@ -1,3 +1,4 @@
+import 'package:amcollective/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utilities/constants.dart';
@@ -14,9 +15,11 @@ import 'package:flutter/material.dart';
 import '../utilities/httpexception.dart';
 enum AuthMode { Signup, Login }
 class AuthCard extends StatefulWidget {
-  const AuthCard({
-    Key key,
-  }) : super(key: key);
+
+  AuthService thisauth;
+
+  AuthCard(this.thisauth);
+
 
   @override
   _AuthCardState createState() => _AuthCardState();
@@ -25,6 +28,7 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
+
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -45,11 +49,38 @@ class _AuthCardState extends State<AuthCard> {
       if (_authMode == AuthMode.Login) {
         // Log user in
         //await Provider.of<Auth>(context,listen: false).login(_authData['email'], _authData['password']);
+        var user = await widget.thisauth.signInWithEmail(
+            _authData['email'], _authData['password']);
+
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TabsScreen(
+                      1
+                  ),
+            ),
+          );
+        }
       } else {
         // Sign user up
         //await Provider.of<Auth>(context,listen: false).signup(_authData['email'], _authData['password']);
-      }
+        var user = await widget.thisauth.registerWithEmail(
+            _authData['email'], _authData['password']);
 
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TabsScreen(
+                      1
+                  ),
+            ),
+          );
+        }
+      }
       // Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
     }on HttpException catch (error){
       var errorMessage='Authentication failed';
@@ -175,7 +206,7 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD',style: TextStyle(color: Colors.black),),
                   onPressed: _switchAuthMode,
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -248,80 +279,11 @@ class AuthScreen extends StatefulWidget {
   _AuthScreenState createState() => _AuthScreenState();
 }
 
+
+
 class _AuthScreenState extends State<AuthScreen> {
   AuthService auth = AuthService();
-  bool _rememberMe = false;
-  
 
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Email',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildForgotPasswordBtn() {
     return Container(
@@ -337,32 +299,6 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildLoginBtn() {
     return Container(
@@ -498,8 +434,11 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+
 
 
 
@@ -508,7 +447,7 @@ class _AuthScreenState extends State<AuthScreen> {
 automaticallyImplyLeading: false,
         leading: IconButton(icon: Icon(Icons.home),
         onPressed:(){
-         print('PRESSED HOMMEEEE');
+
           Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -561,11 +500,11 @@ automaticallyImplyLeading: false,
                         ),
                       ),
                       SizedBox(height: 30.0),
-                      AuthCard(),
+                      AuthCard(auth),
 
                       _buildForgotPasswordBtn(),
 
-                      _buildLoginBtn(),
+
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),

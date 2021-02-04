@@ -64,7 +64,7 @@ class _TabsScreenState extends State<TabsScreen> {
     final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return Scaffold(
       key: _scaffoldKey,
-      drawer: AppDrawer(),
+
 
       appBar: AppBar(
         leading: IconButton(
