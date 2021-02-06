@@ -7,7 +7,7 @@ import '../widgets/bottomtab.dart';
 import '../screens/deals.dart';
 
 import 'package:provider/provider.dart';
-
+import '../providers/roleprovider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,19 +46,23 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try{
-      if (_authMode == AuthMode.Login) {
+      if (_authMode == AuthMode.Login)  {
         // Log user in
         //await Provider.of<Auth>(context,listen: false).login(_authData['email'], _authData['password']);
         var user = await widget.thisauth.signInWithEmail(
             _authData['email'], _authData['password']);
+        print('loggin in!!!!!!');
 
+        print('oooh gg to push!!!');
         if (user != null) {
+         // await Provider.of<RoleProvider>(context).getUserData();
+
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
                   TabsScreen(
-                      1
+                      3
                   ),
             ),
           );

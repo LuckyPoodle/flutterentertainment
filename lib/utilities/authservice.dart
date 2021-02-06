@@ -4,7 +4,7 @@ import '../models/deal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import '../models/appuser.dart';
-
+import '../models/address.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
@@ -136,7 +136,9 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'dealname':deal.dealname,
       'dealdetails':deal.dealdetails,
       'location':deal.location,
-      'imageUrl':deal.imageUrl
+      'imageUrl':deal.imageUrl,
+      'longitude':deal.longitude,
+      'latitude':deal.latitude
     }) .then((value){
       print('added deal!!!!!!!!!!!!!');
       return true;
@@ -148,14 +150,42 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
     });
   }
 
+  Future<bool> updateDeal(Deal deal) async{
+    await FirebaseFirestore.instance.collection('deals').doc(deal.id).set({
+       'updatedAt':Timestamp.now(),
+      'userId': _auth.currentUser.uid,
+      'dealname':deal.dealname,
+      'dealdetails':deal.dealdetails,
+      'location':deal.location,
+      'imageUrl':deal.imageUrl,
+      'longitude':deal.longitude,
+      'latitude':deal.latitude
+    },SetOptions(merge: true)) .then((value){
+      print('updated deal!!!!!!!!!!!!!');
+      return true;
+    })
+        .catchError((error)  {
+      print(error);
+      print('not added');
+      return false;
+    });
+  }
 
-Stream<QuerySnapshot> getBrandDeal(String id) {
-
+  Stream<QuerySnapshot> getBrandDeal(String id) {
   Stream<QuerySnapshot> q= _db.collection('deals').where('userId',isEqualTo: id ).snapshots();
   print(q);
   print('==============in getbranddeal=====================');
   return q;
 }
+
+
+  Stream<QuerySnapshot> getAllDeals() {
+
+    Stream<QuerySnapshot> q= _db.collection('deals').snapshots();
+    print(q);
+    print('==============in getALLDEALS=====================');
+    return q;
+  }
 
 
 Future<AppUser> getAppUserData() async{
@@ -168,13 +198,16 @@ Future<AppUser> getAppUserData() async{
        var isbrand=data['role']=='brand';
        String brandname=data['brandname'];
        String description=data['description'];
-       var outlistlist=data['outletlist'];
+       var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
+       print('outletlist');
+       print(outlistlist);
+       //(data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
        var dealsbybusiness=data['dealsbybusiness'];
        AppUser thisuser=AppUser(
            description: description,
            isBrand: isbrand,
            brandname: brandname,
-           outletlist: [],
+           outletlist: outlistlist,
            dealsbybusiness:[]
 
        );

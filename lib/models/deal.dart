@@ -1,20 +1,30 @@
 
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class Deal{
 
   String dealname;
   String location;
+  String latitude;
+  String longitude;
   String imageUrl;
-
-
-
   String dealdetails;
   String id;
   String createdBy;
 
 
-  Deal({this.id,this.dealname,this.location,this.dealdetails,this.createdBy,this.imageUrl});
+  Deal({this.id,this.dealname,this.longitude,this.latitude,this.location,this.dealdetails,this.createdBy,this.imageUrl});
 
-
+  factory Deal.fromDocument(QueryDocumentSnapshot data) {
+    return Deal(
+      dealname: data.data()['dealname'],
+      location: data.data()['location'],
+      createdBy: data.data()['userId'],
+      dealdetails: data.data()['dealdetails'],
+        imageUrl: data.data()['imageUrl'],
+      longitude: data.data()['longitude'],
+      latitude: data.data()['latitude'],
+      id: data.id,
+    );
+  }
 
 }

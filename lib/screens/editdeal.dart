@@ -3,12 +3,16 @@ import 'package:amcollective/utilities/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../providers/dealprovider.dart';
+import 'package:provider/provider.dart';
+
 
 class EditDealScreen extends StatefulWidget {
 
-    String uid;
+  static const routeName='/edit-deal';
 
-  EditDealScreen(this.uid);
+
+  EditDealScreen();
   @override
   _EditDealScreenState createState() => _EditDealScreenState();
 }
@@ -27,14 +31,16 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
   //global key for form
   final _form=GlobalKey<FormState>();
-  var _editedProduct=Deal(id:null,dealname:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
+  var _editedProduct=Deal(id:null,dealname:'',latitude:'',longitude:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
 
   var _initValues={
     'dealname':'',
     'location':'',
     'dealdetails':'',
     'createdBy':'',
-    'imageUrl':''
+    'imageUrl':'',
+    'latitude':'',
+    'longitude':''
   };
   var _isInit = true;
   var _isLoading=false;
@@ -52,9 +58,25 @@ class _EditDealScreenState extends State<EditDealScreen> {
     if (_isInit){
       //ModalRoute which we use to get the setting and argument does not work in initState
       final productId=ModalRoute.of(context).settings.arguments as String;
-
+      print('in EDIT DEAL, the user id if any is ');
+      print(productId);
       if(productId!=null){
-        
+        final productwewanttoedit=Provider.of<DealProvider>(context,listen: false).findById(productId);
+
+        _editedProduct=productwewanttoedit;
+        print('is updating existing____');
+        print(_editedProduct);
+        _initValues={
+          'dealname':_editedProduct.dealname,
+          'location':_editedProduct.location,
+          'dealdetails':_editedProduct.dealdetails,
+          'createdBy':_editedProduct.createdBy,
+          'imageUrl':_editedProduct.imageUrl,
+          'latitude':_editedProduct.latitude,
+          'longitude':_editedProduct.longitude
+        };
+
+        _imageUrlController.text=_editedProduct.imageUrl;
 
       }
 
@@ -103,10 +125,30 @@ class _EditDealScreenState extends State<EditDealScreen> {
     });
     if (_editedProduct.id != null) {
 
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
+      try {
+        auth.updateDeal(_editedProduct);
+      } catch (error) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occurred!'),
+            content: Text('Something went wrong.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }
     } else {
       try {
         auth.addDeal(_editedProduct);
@@ -216,6 +258,48 @@ class _EditDealScreenState extends State<EditDealScreen> {
                   focusNode: _locationFocusNode,
                   onSaved: (value){
                     _editedProduct=Deal(id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:value,imageUrl: _editedProduct.imageUrl);
+                  },
+                  validator: (value){
+                    //null is returned when input is correct, return a text when its wrong
+                    if(value.isEmpty){
+                      return 'Please provide a value';
+                    }
+
+                    return null;
+                  },
+
+
+                ),
+                TextFormField(
+                  initialValue: _initValues['latitude'],
+                  decoration:InputDecoration(labelText:'Location Latitude'),
+                  maxLines: 3,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.multiline,
+
+                  onSaved: (value){
+                    _editedProduct=Deal(latitude:value,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
+                  },
+                  validator: (value){
+                    //null is returned when input is correct, return a text when its wrong
+                    if(value.isEmpty){
+                      return 'Please provide a value';
+                    }
+
+                    return null;
+                  },
+
+
+                ),
+                TextFormField(
+                  initialValue: _initValues['longitude'],
+                  decoration:InputDecoration(labelText:'Location Longitude'),
+                  maxLines: 3,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.multiline,
+
+                  onSaved: (value){
+                    _editedProduct=Deal(longitude:value,latitude:_editedProduct.latitude,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
                   },
                   validator: (value){
                     //null is returned when input is correct, return a text when its wrong

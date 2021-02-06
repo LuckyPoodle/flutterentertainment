@@ -1,12 +1,14 @@
 import 'package:amcollective/providers/roleprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
+import 'package:flutter_html/style.dart';
 import '../screens/auth_screen.dart';
 import '../utilities/authservice.dart';
 import 'package:provider/provider.dart';
 import './editdeal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/appuser.dart';
+import '../screens/editdeal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profile extends StatefulWidget {
@@ -48,6 +50,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+   final width=MediaQuery.of(context).size.width;
     User user = Provider.of<User>(context);
     RoleProvider roleprovider=Provider.of<RoleProvider>(context);
     thisappuser=roleprovider.currentuser;
@@ -69,107 +72,141 @@ class _ProfileState extends State<Profile> {
    if (user!=null) {
 
       return Scaffold(
-      body: Column(children: [
-        Padding(
-        padding: EdgeInsets.all(16.0),
-        child:  Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 60,
-              backgroundImage:
-              NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/330px-SNice.svg.png"),
-              backgroundColor: Colors.transparent,
+      body: SingleChildScrollView(
+        child: Column(children: [
+          SizedBox(height: 10,),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child:  Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 60,
+
+                  backgroundImage:
+                  NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/330px-SNice.svg.png"),
+                  backgroundColor: Colors.transparent,
+                ),
+                SizedBox(width: 10,),
+                Column(children: <Widget>[
+                  Text(thisappuser.brandname,style: TextStyle(fontWeight: FontWeight.bold,fontSize:30),),
+                  Container(
+                    width: width*0.5,
+                    child: Text(thisappuser.description),
+                  ),
+                  Text('Location(s)'),
+                  for (var address in thisappuser.outletlist)
+                    Text(address.address)
+
+                ],)
+
+                ,
+
+              ],
             ),
-Column(children: <Widget>[
-  Text('username')
-],)
+          ),
+          Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(5.0),
+                width: width*0.5,
+                child: FlatButton(
 
-,
-            FlatButton(
-                child: Text('logout'),
-                color: Colors.red,
-                onPressed: () async {
-                  await auth.signOut();
-                  roleprovider.signOut();
-                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-                })
-          ],
-        ),
-      ),Padding(
-          padding: EdgeInsets.all(20),
-          child: Text(thisappuser.brandname),
-        ),
 
-     if (thisappuser.isBrand)
-        Column(
-          children: <Widget>[ Padding(
-            padding: EdgeInsets.all(20),
-            child: Text('Your Submitted Deals'),
+                    child: Text('Edit Profile'),
+                    color: Colors.blue,
+                    onPressed: () async {
+                      await auth.signOut();
+                      roleprovider.signOut();
+                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                    }),
+              ),
+              Container(
+                width: width*0.5,
+                padding: EdgeInsets.all(5.0),
+                child: FlatButton(
+
+                    child: Text('Log Out'),
+                    color: Colors.red,
+                    onPressed: () async {
+                      await auth.signOut();
+                      roleprovider.signOut();
+                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                    }),
+              ),
+            ],
           ),
 
-            Container(
-                child: StreamBuilder(
-                  stream:auth.getBrandDeal(user.uid),
-                  builder:(ctx, AsyncSnapshot<QuerySnapshot> chatSnapshot) {
-                    if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(backgroundColor: Colors.black,),
-                      );
-                    }
-                    final chatDocs = chatSnapshot.data.docs;
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: chatDocs.length,
-                        //Text(chatDocs[index].data()['dealname']),
-                        itemBuilder: (ctx, index) => Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                          elevation: 4,
-                          margin: EdgeInsets.all(4),
-                          child: InkWell(
-                            onTap: () {
+          if (thisappuser.isBrand)
+            Column(
+              children: <Widget>[ Padding(
+                padding: EdgeInsets.all(20),
+                child: Text('Your Submitted Deals'),
+              ),
 
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              child: ListTile(
-                                title: Text(
-                                  chatDocs[index].data()['dealname'],
-                                  style: Theme.of(context).textTheme.title,
+                Container(
+                    child: StreamBuilder(
+                      stream:auth.getBrandDeal(user.uid),
+                      builder:(ctx, AsyncSnapshot<QuerySnapshot> chatSnapshot) {
+                        if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(backgroundColor: Colors.black,),
+                          );
+                        }
+                        final chatDocs = chatSnapshot.data.docs;
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: chatDocs.length,
+
+                            itemBuilder: (ctx, index) => Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              elevation: 4,
+                              margin: EdgeInsets.all(4),
+                              child: InkWell(
+                                onTap: () {
+
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: ListTile(
+                                    title: Text(
+                                      chatDocs[index].data()['dealname'],
+                                      style: Theme.of(context).textTheme.title,
+                                    ),
+                                    subtitle: Text(
+                                      chatDocs[index].data()['dealdetails'],
+                                      overflow: TextOverflow.fade,
+                                      style: Theme.of(context).textTheme.subhead,
+                                    ),
+                                    trailing: IconButton(icon: Icon(Icons.edit), onPressed: () {
+                                      Navigator.of(context).pushNamed(EditDealScreen.routeName,arguments:chatDocs[index].id);
+                                    },),
+                                  ),
                                 ),
-                                subtitle: Text(
-                                  chatDocs[index].data()['dealdetails'],
-                                  overflow: TextOverflow.fade,
-                                  style: Theme.of(context).textTheme.subhead,
-                                ),
-                                trailing: IconButton(icon: Icon(Icons.edit),),
                               ),
-                            ),
-                          ),
-                        )
-                    );
-                  }, )
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child:  FlatButton(
-                  child: Text('add deal'),
-                  color: Colors.blue,
-                  onPressed: ()  {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditDealScreen(
-                            user.uid
-                        ),
-                      ),
-                    );
+                            )
+                        );
+                      }, )
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child:  FlatButton(
+                      child: Text('add deal'),
+                      color: Colors.blue,
+                      onPressed: ()  {
+                        Navigator.of(context).pushNamed(EditDealScreen.routeName );
 
-                  }),
-            ),],
-        )
+                      }),
+                ),
+              SizedBox(
+                height: 80,
+              )
+
+              ],
+            )
 
 
-      ],)
+        ],),
+      )
     );
 
 
