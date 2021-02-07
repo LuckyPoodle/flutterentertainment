@@ -1,4 +1,5 @@
 import 'package:amcollective/providers/roleprovider.dart';
+import 'package:amcollective/screens/editprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
 import 'package:flutter_html/style.dart';
@@ -45,6 +46,11 @@ class _ProfileState extends State<Profile> {
       thisappuser=Provider.of<RoleProvider>(context,listen: false).currentuser;
     };
 
+    print('user-----');
+    final user = Provider.of<RoleProvider>(context,listen: false);
+    print(user.mycurrentuser.brandname);
+    print("---------");
+
   }
 
 
@@ -52,6 +58,8 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
    final width=MediaQuery.of(context).size.width;
     User user = Provider.of<User>(context);
+    print('in profile build....');
+    print(user);
     RoleProvider roleprovider=Provider.of<RoleProvider>(context);
     thisappuser=roleprovider.currentuser;
 
@@ -81,9 +89,8 @@ class _ProfileState extends State<Profile> {
               children: <Widget>[
                 CircleAvatar(
                   radius: 60,
-
                   backgroundImage:
-                  NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/330px-SNice.svg.png"),
+                  NetworkImage(thisappuser.profileimg!=null?thisappuser.profileimg:'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(width: 10,),
@@ -115,9 +122,8 @@ class _ProfileState extends State<Profile> {
                     child: Text('Edit Profile'),
                     color: Colors.blue,
                     onPressed: () async {
-                      await auth.signOut();
-                      roleprovider.signOut();
-                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+
+                      Navigator.of(context).pushNamed(EditProfileScreen.routeName,arguments:thisappuser);
                     }),
               ),
               Container(

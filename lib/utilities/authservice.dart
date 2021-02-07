@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/deal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,14 @@ class AuthService {
     outletlist: [],);
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  Stream<AppUser> userData(String uid) {
+    return users.doc(uid).snapshots().map((doc) {
+      return AppUser.fromDocument(doc);
+    });
+  }
+
+
+
   // Firebase user a realtime stream
 
 // Firebase user one-time fetch
@@ -27,6 +36,7 @@ class AuthService {
 //}
 
 Stream<User> get user => FirebaseAuth.instance.authStateChanges();
+
 
 
   /// Sign in with Google
@@ -104,6 +114,9 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
 }
 }
 
+
+
+
   
   void addUserData(UserCredential user) async{
 
@@ -113,11 +126,12 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
             .doc(user.user.uid)
             .set({
         'brandname':user.user.displayName,
-
-        
-          'role':'public'
-          
-          
+        'profileimg':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/330px-SNice.svg.png',
+        'description':'Brand description',
+        'outletlist':[],
+        'isBrand':false,
+        'dealsbybusiness':[],
+        'role':'public',
 
         });
 
@@ -177,7 +191,12 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
   print('==============in getbranddeal=====================');
   return q;
 }
-
+  Stream<DocumentSnapshot> getUserStream() {
+    Stream<DocumentSnapshot> q= _db.collection('users').doc(_auth.currentUser.uid).snapshots();
+    print(q);
+    print('==============in getprofile=====================');
+    return q;
+  }
 
   Stream<QuerySnapshot> getAllDeals() {
 
@@ -185,6 +204,23 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
     print(q);
     print('==============in getALLDEALS=====================');
     return q;
+  }
+
+  Future<bool> updateUser(AppUser appuser) async{
+     print('in updateUser');
+
+
+    await FirebaseFirestore.instance.collection('users').doc(appuser.id).set(appuser.toMap(),SetOptions(merge: true))
+        .then((value){
+      print('updated user!!!!!!!!!!!!!');
+      return true;
+    })
+        .catchError((error)  {
+      print(error);
+
+      print('not added');
+      return false;
+    });
   }
 
 
@@ -198,9 +234,12 @@ Future<AppUser> getAppUserData() async{
        var isbrand=data['role']=='brand';
        String brandname=data['brandname'];
        String description=data['description'];
+       String profileimg=data['profileimg'];
        var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
        print('outletlist');
        print(outlistlist);
+       print(outlistlist[0]);
+
        //(data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
        var dealsbybusiness=data['dealsbybusiness'];
        AppUser thisuser=AppUser(
@@ -208,9 +247,12 @@ Future<AppUser> getAppUserData() async{
            isBrand: isbrand,
            brandname: brandname,
            outletlist: outlistlist,
-           dealsbybusiness:[]
+           dealsbybusiness:[],
+            id:_auth.currentUser.uid,
+         profileimg:profileimg ,
 
        );
+       appUser=thisuser;
 
        return thisuser;
      }else{
@@ -221,6 +263,38 @@ Future<AppUser> getAppUserData() async{
          isBrand: false,
          outletlist: [],);
      }
+}
+
+Future<AppUser> fetchupdateduser() async{
+  var snapshot=await _db.collection('users').doc(_auth.currentUser.uid).get();
+  print(snapshot);
+  var data=snapshot.data();
+  var isbrand=data['role']=='brand';
+  String brandname=data['brandname'];
+  String description=data['description'];
+  String profileimg=data['profileimg'];
+
+  var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
+  print('outletlist');
+  print(outlistlist);
+  print(outlistlist[0]);
+
+  //(data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
+  var dealsbybusiness=data['dealsbybusiness'];
+  AppUser thisuser=AppUser(
+      description: description,
+      isBrand: isbrand,
+      brandname: brandname,
+      outletlist: outlistlist,
+      profileimg:profileimg ,
+      dealsbybusiness:[],
+      id:_auth.currentUser.uid
+
+
+  );
+  appUser=thisuser;
+
+  return thisuser;
 }
 
 

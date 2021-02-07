@@ -8,8 +8,8 @@ class PlaceLocation {
   final String address;
 
   const PlaceLocation({
-    @required this.latitude,
-    @required this.longitude,
+    this.latitude,
+    this.longitude,
     this.address,
   });
   factory PlaceLocation.fromMap(Map data) {
@@ -19,6 +19,15 @@ class PlaceLocation {
       address: data['address'] ?? '',
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
+    };
+  }
+
 }
 
 

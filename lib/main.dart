@@ -2,6 +2,7 @@ import 'package:amcollective/providers/roleprovider.dart';
 import 'package:amcollective/screens/auth_screen.dart';
 import 'package:amcollective/screens/blogpage.dart';
 import 'package:amcollective/screens/editdeal.dart';
+import 'package:amcollective/screens/editprofile.dart';
 import 'package:amcollective/screens/game.dart';
 import 'package:amcollective/screens/games_overall.dart';
 import 'package:amcollective/screens/profile.dart';
@@ -19,7 +20,7 @@ import 'models/appuser.dart';
 import 'providers/roleprovider.dart';
 import 'models/deal.dart';
 import 'providers/dealprovider.dart';
-
+import 'screens/editprofile.dart';
 
 
 //void main() => runApp(MyApp());
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         return Deal.fromDocument(doc);
       }).toList();
     });
-   
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -46,17 +47,25 @@ class MyApp extends StatelessWidget {
           ),
           StreamProvider<User>.value(value: AuthService().user),
           /////
-          ChangeNotifierProvider(
-              create:(ctx)=>RoleProvider()
-          ),
+
           StreamProvider<List<Deal>>(
             create: (context)=>dealsDataStream,
           ),
           ChangeNotifierProxyProvider<List<Deal>,DealProvider>(
-           update: (_,deals,__){
-             return DealProvider(deals);
-           },
-          )
+              update: (_,deals,__){
+                return DealProvider(deals);
+              }),
+          ChangeNotifierProxyProvider<User,RoleProvider>(
+              update: (_,user,__) {
+                AuthService as=AuthService();
+                as.getAppUserData();
+
+                return RoleProvider(as.appUser);
+              }),
+          ProxyProvider<User, Stream<AppUser>>(update: (_, user, __) {
+            return AuthService().userData(user.uid);
+          })
+
 
 
         ],child: MaterialApp(
@@ -79,7 +88,8 @@ class MyApp extends StatelessWidget {
           GameHomeScreen.routeName:(ctx)=>GameHomeScreen(),
           GamesOverallScreen.routeName:(ctx)=>GamesOverallScreen(),
           Profile.routeName:(ctx)=>Profile(),
-          EditDealScreen.routeName:(ctx)=>EditDealScreen()
+          EditDealScreen.routeName:(ctx)=>EditDealScreen(),
+          EditProfileScreen.routeName:(ctx)=>EditProfileScreen(),
         },
       ),
       );

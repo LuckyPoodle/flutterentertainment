@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/dealprovider.dart';
 import 'package:provider/provider.dart';
 
-
 class EditDealScreen extends StatefulWidget {
 
   static const routeName='/edit-deal';
@@ -19,8 +18,6 @@ class EditDealScreen extends StatefulWidget {
 
 class _EditDealScreenState extends State<EditDealScreen> {
 
-
-
   final _locationFocusNode=FocusNode(); //so when u press the next button in keyboard for title, go to next input field
   final _descriptionFocusNode=FocusNode();
   final _imageUrlFocusNode=FocusNode();
@@ -28,11 +25,9 @@ class _EditDealScreenState extends State<EditDealScreen> {
   //if the focus nodes still around, it will lead to memory leak
   final AuthService auth=AuthService();
   final _imageUrlController=TextEditingController();
-
   //global key for form
   final _form=GlobalKey<FormState>();
   var _editedProduct=Deal(id:null,dealname:'',latitude:'',longitude:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
-
   var _initValues={
     'dealname':'',
     'location':'',
