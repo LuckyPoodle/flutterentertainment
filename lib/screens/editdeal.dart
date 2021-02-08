@@ -17,7 +17,7 @@ class EditDealScreen extends StatefulWidget {
 }
 
 class _EditDealScreenState extends State<EditDealScreen> {
-
+String dropdownValue = 'North';
   final _locationFocusNode=FocusNode(); //so when u press the next button in keyboard for title, go to next input field
   final _descriptionFocusNode=FocusNode();
   final _imageUrlFocusNode=FocusNode();
@@ -27,7 +27,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
   final _imageUrlController=TextEditingController();
   //global key for form
   final _form=GlobalKey<FormState>();
-  var _editedProduct=Deal(id:null,dealname:'',latitude:'',longitude:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
+  var _editedProduct=Deal(id:null,dealname:'',region:'',latitude:'',longitude:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
   var _initValues={
     'dealname':'',
     'location':'',
@@ -35,7 +35,8 @@ class _EditDealScreenState extends State<EditDealScreen> {
     'createdBy':'',
     'imageUrl':'',
     'latitude':'',
-    'longitude':''
+    'longitude':'',
+    'region':''
   };
   var _isInit = true;
   var _isLoading=false;
@@ -57,6 +58,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
       print(productId);
       if(productId!=null){
         final productwewanttoedit=Provider.of<DealProvider>(context,listen: false).findById(productId);
+        dropdownValue=productwewanttoedit.region;
 
         _editedProduct=productwewanttoedit;
         print('is updating existing____');
@@ -68,7 +70,8 @@ class _EditDealScreenState extends State<EditDealScreen> {
           'createdBy':_editedProduct.createdBy,
           'imageUrl':_editedProduct.imageUrl,
           'latitude':_editedProduct.latitude,
-          'longitude':_editedProduct.longitude
+          'longitude':_editedProduct.longitude,
+          'region':_editedProduct.region
         };
 
         _imageUrlController.text=_editedProduct.imageUrl;
@@ -121,6 +124,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
     if (_editedProduct.id != null) {
 
       try {
+        _editedProduct.region=dropdownValue;
         auth.updateDeal(_editedProduct);
       } catch (error) {
         await showDialog(
@@ -146,6 +150,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
       }
     } else {
       try {
+        _editedProduct.region=dropdownValue;
         auth.addDeal(_editedProduct);
       } catch (error) {
         await showDialog(
@@ -194,7 +199,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
                   initialValue: _initValues['dealname'],
 
-                  decoration:InputDecoration(labelText:'Deal Name'),
+                  decoration:InputDecoration(labelText:'Deal Name',hintText: 'Deal Name'),
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (valueinputtofield){
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
@@ -205,6 +210,8 @@ class _EditDealScreenState extends State<EditDealScreen> {
                         dealdetails:_editedProduct.dealdetails,
                         location: _editedProduct.location,
                         id:_editedProduct.id,
+                        latitude: _editedProduct.latitude,
+                        longitude: _editedProduct.longitude,
                         imageUrl: _editedProduct.imageUrl);
                   },
                   validator: (value){
@@ -219,7 +226,7 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
                 TextFormField(
                   initialValue: _initValues['dealdetails'],
-                  decoration:InputDecoration(labelText:'Description'),
+                  decoration:InputDecoration(labelText:'Description',hintText: 'Description'),
                   maxLines: 3,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.multiline,
@@ -229,7 +236,8 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
                   },
                   onSaved: (value){
-                    _editedProduct=Deal(id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: value,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
+                    _editedProduct=Deal(region:_editedProduct.region,id:_editedProduct.id,dealname:_editedProduct.dealname,  latitude: _editedProduct.latitude,
+                        longitude: _editedProduct.longitude,dealdetails: value,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
                   },
                   validator: (value){
                     //null is returned when input is correct, return a text when its wrong
@@ -246,13 +254,14 @@ class _EditDealScreenState extends State<EditDealScreen> {
                 ),
                 TextFormField(
                   initialValue: _initValues['location'],
-                  decoration:InputDecoration(labelText:'Location of Deal'),
-                  maxLines: 3,
+                  decoration:InputDecoration(labelText:'Location of Deal',hintText: 'Location of Deal'),
+            
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.multiline,
+               
                   focusNode: _locationFocusNode,
                   onSaved: (value){
-                    _editedProduct=Deal(id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:value,imageUrl: _editedProduct.imageUrl);
+                    _editedProduct=Deal(region:_editedProduct.region,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:value,imageUrl: _editedProduct.imageUrl , latitude: _editedProduct.latitude,
+                        longitude: _editedProduct.longitude,);
                   },
                   validator: (value){
                     //null is returned when input is correct, return a text when its wrong
@@ -267,13 +276,13 @@ class _EditDealScreenState extends State<EditDealScreen> {
                 ),
                 TextFormField(
                   initialValue: _initValues['latitude'],
-                  decoration:InputDecoration(labelText:'Location Latitude'),
-                  maxLines: 3,
+                  decoration:InputDecoration(labelText:'Location Latitude',hintText: 'Location Latitude'),
+                 
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.multiline,
+                 
 
                   onSaved: (value){
-                    _editedProduct=Deal(latitude:value,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
+                    _editedProduct=Deal(region:_editedProduct.region,latitude:value,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl,longitude: _editedProduct.longitude);
                   },
                   validator: (value){
                     //null is returned when input is correct, return a text when its wrong
@@ -288,13 +297,13 @@ class _EditDealScreenState extends State<EditDealScreen> {
                 ),
                 TextFormField(
                   initialValue: _initValues['longitude'],
-                  decoration:InputDecoration(labelText:'Location Longitude'),
-                  maxLines: 3,
+                  decoration:InputDecoration(labelText:'Location Longitude',hintText: 'Location Longitude'),
+                 
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.multiline,
+                
 
                   onSaved: (value){
-                    _editedProduct=Deal(longitude:value,latitude:_editedProduct.latitude,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
+                    _editedProduct=Deal(region:_editedProduct.region,longitude:value,latitude:_editedProduct.latitude,id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: _editedProduct.imageUrl);
                   },
                   validator: (value){
                     //null is returned when input is correct, return a text when its wrong
@@ -307,6 +316,22 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
 
                 ),
+                Text('Deal region'),
+            DropdownButton<String>(
+            value: dropdownValue,
+            onChanged: (String newValue) {
+              setState(() {
+                dropdownValue = newValue;
+              });
+            },
+            items: <String>['North', 'South', 'West', 'East','Central']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -355,7 +380,8 @@ class _EditDealScreenState extends State<EditDealScreen> {
 
                         onSaved: (value){
 
-                          _editedProduct=Deal(id:_editedProduct.id,dealname:_editedProduct.dealname,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: value);
+                          _editedProduct=Deal(region:_editedProduct.region,id:_editedProduct.id,dealname:_editedProduct.dealname,  latitude: _editedProduct.latitude,
+                        longitude: _editedProduct.longitude,dealdetails: _editedProduct.dealdetails,location:_editedProduct.location,imageUrl: value);
                         },
 
                       ),

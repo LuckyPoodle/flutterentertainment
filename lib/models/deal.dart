@@ -10,9 +10,10 @@ class Deal{
   String dealdetails;
   String id;
   String createdBy;
+  String region;
 
 
-  Deal({this.id,this.dealname,this.longitude,this.latitude,this.location,this.dealdetails,this.createdBy,this.imageUrl});
+  Deal({this.id,this.dealname,this.longitude,this.latitude,this.location,this.dealdetails,this.createdBy,this.region,this.imageUrl});
 
   factory Deal.fromDocument(QueryDocumentSnapshot data) {
     return Deal(
@@ -23,6 +24,7 @@ class Deal{
         imageUrl: data.data()['imageUrl'],
       longitude: data.data()['longitude'],
       latitude: data.data()['latitude'],
+      region: data.data()['region'],
       id: data.id,
     );
   }

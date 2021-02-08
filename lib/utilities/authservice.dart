@@ -152,7 +152,8 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'location':deal.location,
       'imageUrl':deal.imageUrl,
       'longitude':deal.longitude,
-      'latitude':deal.latitude
+      'latitude':deal.latitude,
+      'region':deal.region
     }) .then((value){
       print('added deal!!!!!!!!!!!!!');
       return true;
@@ -173,7 +174,8 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'location':deal.location,
       'imageUrl':deal.imageUrl,
       'longitude':deal.longitude,
-      'latitude':deal.latitude
+      'latitude':deal.latitude,
+      'region':deal.region
     },SetOptions(merge: true)) .then((value){
       print('updated deal!!!!!!!!!!!!!');
       return true;
@@ -184,6 +186,19 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       return false;
     });
   }
+
+   Future<bool> deleteDeal(String dealid) async{
+    await FirebaseFirestore.instance.collection('deals').doc(dealid).delete() .then((value){
+      print('deleted deal!!!!!!!!!!!!!');
+      return true;
+    })
+        .catchError((error)  {
+      print(error);
+      print('not deleted');
+      return false;
+    });
+  }
+
 
   Stream<QuerySnapshot> getBrandDeal(String id) {
   Stream<QuerySnapshot> q= _db.collection('deals').where('userId',isEqualTo: id ).snapshots();

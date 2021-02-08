@@ -17,6 +17,18 @@ class DealProvider with ChangeNotifier{
 }
 
 
+List<Deal> getDealsFrom(String region){
+  List<Deal> newlist = [for (var e in dealsinprovider) if (e.region==region) e];
+  return newlist;
+}
+
+
+
+
+
+
+
+
 
 
 

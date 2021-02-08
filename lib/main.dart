@@ -1,11 +1,13 @@
 import 'package:amcollective/providers/roleprovider.dart';
 import 'package:amcollective/screens/auth_screen.dart';
 import 'package:amcollective/screens/blogpage.dart';
+import 'package:amcollective/screens/deals_map_screen.dart';
 import 'package:amcollective/screens/editdeal.dart';
 import 'package:amcollective/screens/editprofile.dart';
 import 'package:amcollective/screens/game.dart';
 import 'package:amcollective/screens/games_overall.dart';
 import 'package:amcollective/screens/profile.dart';
+import './screens/dealbycondition.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +92,8 @@ class MyApp extends StatelessWidget {
           Profile.routeName:(ctx)=>Profile(),
           EditDealScreen.routeName:(ctx)=>EditDealScreen(),
           EditProfileScreen.routeName:(ctx)=>EditProfileScreen(),
+          DealsMapScreen.routeName:(ctx)=>DealsMapScreen(),
+          DealsByConditionScreen.routeName:(ctx)=>DealsByConditionScreen(),
         },
       ),
       );

@@ -209,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Add TextFormFields and ElevatedButton here.
                   TextFormField(
                     initialValue: _initValues['brandname'],
-                    decoration:InputDecoration(labelText:'Your Display Name'),
+                    decoration:InputDecoration(labelText:'Your Display Name',hintText: 'Display Name'),
 
                     onSaved: (value){
                       _editedProduct=AppUser(brandname:value,
@@ -230,7 +230,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   TextFormField(
                     initialValue: _initValues['description'],
-                    decoration:InputDecoration(labelText:'Description'),
+                    decoration:InputDecoration(labelText:'Description',hintText: 'Description'),
                     keyboardType: TextInputType.multiline,
 
                     onSaved: (value){
@@ -259,7 +259,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   TextFormField(
                     initialValue: _editedProduct.outletlist.length.toString(),
-                    decoration:InputDecoration(labelText:'Number of Physical Location'),
+                    
+                    decoration:InputDecoration(labelText:'Number of Physical Location',hintText: 'Number of Physical Location'),
 
                     keyboardType: TextInputType.number,
 
@@ -287,7 +288,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                         TextFormField(
 
-                          decoration:InputDecoration(labelText:'Address'),
+                          decoration:InputDecoration(labelText:'Address',hintText: 'Address'),
                           initialValue: thisappuser.outletlist.length<=i?'':thisappuser.outletlist[i].address,
                           keyboardType: TextInputType.multiline,
                           onFieldSubmitted: (valueinputtofield){

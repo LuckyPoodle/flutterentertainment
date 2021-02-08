@@ -57,6 +57,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
    final width=MediaQuery.of(context).size.width;
+   final scaffold = Scaffold.of(context);
     User user = Provider.of<User>(context);
     print('in profile build....');
     print(user);
@@ -65,15 +66,22 @@ class _ProfileState extends State<Profile> {
 
     if (user==null){
       return Scaffold(
-        body: Container(
+        body: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+  crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+          Padding(padding: EdgeInsets.all(30),child: Text('Not logged in',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),),
+           Container(
+          padding: EdgeInsets.all(30),
           child:  FlatButton(
               child: Text('Login'),
-              color: Colors.red,
+              color: Colors.green,
               onPressed: () {
 
                 Navigator.of(context).pushNamed(AuthScreen.routeName);
               }),
         ),
+        ],)
       );
     }
 
@@ -167,28 +175,44 @@ class _ProfileState extends State<Profile> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               elevation: 4,
                               margin: EdgeInsets.all(4),
-                              child: InkWell(
-                                onTap: () {
-
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(8),
-                                  child: ListTile(
-                                    title: Text(
-                                      chatDocs[index].data()['dealname'],
-                                      style: Theme.of(context).textTheme.title,
-                                    ),
-                                    subtitle: Text(
-                                      chatDocs[index].data()['dealdetails'],
-                                      overflow: TextOverflow.fade,
-                                      style: Theme.of(context).textTheme.subhead,
-                                    ),
-                                    trailing: IconButton(icon: Icon(Icons.edit), onPressed: () {
-                                      Navigator.of(context).pushNamed(EditDealScreen.routeName,arguments:chatDocs[index].id);
-                                    },),
-                                  ),
-                                ),
-                              ),
+                              child: ListTile(
+      title: Text(chatDocs[index].data()['dealname']),
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(chatDocs[index].data()['imageUrl']),
+      ),
+      trailing: Container(
+        width: 100,
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit,color: Colors.black,),
+              onPressed: () {
+                  Navigator.of(context).pushNamed(EditDealScreen.routeName,arguments:chatDocs[index].id);
+              },
+              color: Theme.of(context).primaryColor,
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () async {
+                try {
+                 print('to delete.....');
+                                          print(chatDocs[index].id);
+                                          auth.deleteDeal(chatDocs[index].id);
+                } catch (error) {
+                  //Scaffold.of(context) can't work here as u r updating widget tree, so we use
+                  scaffold.showSnackBar(
+                    SnackBar(
+                      content: Text('Deleting failed!', textAlign: TextAlign.center,),
+                    ),
+                  );
+                }
+              },
+              color: Theme.of(context).errorColor,
+            ),
+          ],
+        ),
+      ),
+    )
                             )
                         );
                       }, )
@@ -196,7 +220,7 @@ class _ProfileState extends State<Profile> {
                 Padding(
                   padding: EdgeInsets.all(16.0),
                   child:  FlatButton(
-                      child: Text('add deal'),
+                      child: Text('Add Deal'),
                       color: Colors.blue,
                       onPressed: ()  {
                         Navigator.of(context).pushNamed(EditDealScreen.routeName );

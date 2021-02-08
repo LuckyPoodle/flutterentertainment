@@ -495,7 +495,7 @@ automaticallyImplyLeading: false,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Sign In',
+                        'Welcome',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
