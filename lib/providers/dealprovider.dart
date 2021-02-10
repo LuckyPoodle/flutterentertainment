@@ -5,9 +5,22 @@ import '../models/deal.dart';
 class DealProvider with ChangeNotifier{
 
 
+  bool thisdealalreadyhasimage=false;
+
+  void dealalreadyhasimage(){
+    thisdealalreadyhasimage=true;
+    notifyListeners();
+    
+  }
+
+
+  bool dealaddimage(){
+    thisdealalreadyhasimage=false;
+    notifyListeners();
+  }
+
+
   List<Deal> dealsinprovider = [];
-
-
   DealProvider(this.dealsinprovider);
 
   Deal findById(String id){

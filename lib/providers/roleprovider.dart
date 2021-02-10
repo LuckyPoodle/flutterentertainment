@@ -4,7 +4,7 @@ import '../models/appuser.dart';
 
 class RoleProvider with ChangeNotifier{
 
-
+  bool uploadedImage=false;
   bool userRoleisBrand=false;
   AuthService authService=AuthService();
   AppUser currentuser=AppUser(
@@ -12,9 +12,20 @@ class RoleProvider with ChangeNotifier{
   dealsbybusiness: [],
   description: 'account description',
   outletlist: [],
-  isBrand: false
+  isBrand: false,
+  imageUrlfromStorage: ''
 
   );
+
+  void hasUploadedImage(){
+    uploadedImage=true;
+    notifyListeners();
+  }
+
+  void hasnotuploadedImage(){
+    uploadedImage=false;
+    notifyListeners();
+  }
 
   AppUser mycurrentuser;
 
@@ -22,19 +33,17 @@ class RoleProvider with ChangeNotifier{
 
   Future<AppUser> getUserData() async{
     print('IN GET USER DATA IN ROLEPROVIDER');
-
     if (currentuser.brandname=='username'){
       currentuser=await authService.getAppUserData();
       print('current user is now ');
       print(currentuser.brandname);
+      
       notifyListeners();
       return currentuser;
     }
   }
   Future<AppUser> getUpdatedUserData() async{
     print('IN GET UPDATE USER DATA IN ROLEPROVIDER');
-
-
       currentuser=await authService.fetchupdateduser();
       print('current user is now ');
       print(currentuser.brandname);
@@ -42,11 +51,7 @@ class RoleProvider with ChangeNotifier{
       return currentuser;
 
   }
-  void setUserData(AppUser appuser){
-    currentuser=appuser;
-    print('setuserdata');
-    notifyListeners();
-  }
+
 
   void signOut(){
     currentuser=AppUser(
@@ -54,7 +59,8 @@ class RoleProvider with ChangeNotifier{
       dealsbybusiness: [],
       description: 'account description',
       outletlist: [],
-      isBrand: false
+      isBrand: false,
+      imageUrlfromStorage: ''
 
     );
     notifyListeners();

@@ -6,7 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import '../models/appuser.dart';
 import '../models/address.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -132,6 +133,7 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
         'isBrand':false,
         'dealsbybusiness':[],
         'role':'public',
+        'imageUrlfromStorage':''
 
         });
 
@@ -143,6 +145,9 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
   }
 
   Future<bool> addDeal(Deal deal) async{
+      if (deal.imageUrlfromStorage==null){
+      deal.imageUrlfromStorage='';
+    }
     await FirebaseFirestore.instance.collection('deals').add({
 
       'createdAt': Timestamp.now(),
@@ -151,6 +156,8 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'dealdetails':deal.dealdetails,
       'location':deal.location,
       'imageUrl':deal.imageUrl,
+    
+      'imageUrlfromStorage':deal.imageUrlfromStorage,
       'longitude':deal.longitude,
       'latitude':deal.latitude,
       'region':deal.region
@@ -166,6 +173,9 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
   }
 
   Future<bool> updateDeal(Deal deal) async{
+    if (deal.imageUrlfromStorage==null){
+      deal.imageUrlfromStorage='';
+    }
     await FirebaseFirestore.instance.collection('deals').doc(deal.id).set({
        'updatedAt':Timestamp.now(),
       'userId': _auth.currentUser.uid,
@@ -173,6 +183,8 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'dealdetails':deal.dealdetails,
       'location':deal.location,
       'imageUrl':deal.imageUrl,
+   
+      'imageUrlfromStorage':deal.imageUrlfromStorage,
       'longitude':deal.longitude,
       'latitude':deal.latitude,
       'region':deal.region
@@ -187,10 +199,27 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
     });
   }
 
-   Future<bool> deleteDeal(String dealid) async{
+   Future<bool> deleteDeal(String dealid,String imageurlifany) async{
     await FirebaseFirestore.instance.collection('deals').doc(dealid).delete() .then((value){
-      print('deleted deal!!!!!!!!!!!!!');
-      return true;
+         if (imageurlifany.isNotEmpty){
+            try {
+                                        var linktodelete=FirebaseStorage.instance.refFromURL(imageurlifany);
+                                        print(linktodelete.fullPath);
+                                        //linktodelete.delete();
+                                        //print(linktodelete.toString());
+                                        FirebaseStorage.instance.ref(linktodelete.fullPath.toString()).delete();
+
+
+                                        print('deleted image file from storage :)');
+                                    
+                                      } catch (e) {
+                                        print('hmm not deleted');
+                                        print(e.toString());
+                                     
+                                      }
+         }
+    
+ 
     })
         .catchError((error)  {
       print(error);
@@ -198,6 +227,8 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       return false;
     });
   }
+
+
 
 
   Stream<QuerySnapshot> getBrandDeal(String id) {
@@ -250,6 +281,7 @@ Future<AppUser> getAppUserData() async{
        String brandname=data['brandname'];
        String description=data['description'];
        String profileimg=data['profileimg'];
+       String imageUrlfromStorage=data['imageUrlfromStorage'];
        var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
        print('outletlist');
        print(outlistlist);
@@ -263,6 +295,7 @@ Future<AppUser> getAppUserData() async{
            brandname: brandname,
            outletlist: outlistlist,
            dealsbybusiness:[],
+           imageUrlfromStorage: imageUrlfromStorage,
             id:_auth.currentUser.uid,
          profileimg:profileimg ,
 
@@ -288,7 +321,7 @@ Future<AppUser> fetchupdateduser() async{
   String brandname=data['brandname'];
   String description=data['description'];
   String profileimg=data['profileimg'];
-
+     String imageUrlfromStorage=data['imageUrlfromStorage'];
   var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
   print('outletlist');
   print(outlistlist);
@@ -303,7 +336,8 @@ Future<AppUser> fetchupdateduser() async{
       outletlist: outlistlist,
       profileimg:profileimg ,
       dealsbybusiness:[],
-      id:_auth.currentUser.uid
+      id:_auth.currentUser.uid,
+            imageUrlfromStorage: imageUrlfromStorage,
 
 
   );

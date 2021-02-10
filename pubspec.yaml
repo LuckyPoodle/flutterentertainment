@@ -60,6 +60,7 @@ dependencies:
   rxdart: ^0.25.0
   firebase_admin: ^0.1.4
   image_picker: ^0.6.5+3
+  firebase_storage: ^7.0.0
 
 
   curved_navigation_bar: ^0.3.7

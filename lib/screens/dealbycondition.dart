@@ -20,10 +20,25 @@ class DealsByConditionScreen extends StatelessWidget {
     child: Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
+    Card(
+    
+    child:Padding(
+      padding: EdgeInsets.all(5),
+      child:  Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+           Image(
+             fit: BoxFit.contain,
+  image: NetworkImage(document.imageUrl.isNotEmpty?document.imageUrl:document.imageUrlfromStorage.isNotEmpty?document.imageUrlfromStorage:''),
+),
     ListTile(
-    leading: Icon(Icons.album, size: 50),
-    title: Text(document.dealname),
-    subtitle: Text(document.dealdetails),
+    leading: Icon(Icons.money, size: 50),
+    title: Text(document.dealname,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+    subtitle: Text(document.dealdetails,style: TextStyle(fontSize: 15),),
+    ),
+    ],
+    ),),
+    
     ),
     ],
     ),

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AppUser{
 
   String profileimg;
+  String imageUrlfromStorage;
   String brandname;
   String description;
   String id;
@@ -15,19 +16,14 @@ class AppUser{
 
 
 
-  AppUser({this.id,this.profileimg,this.brandname,this.description,this.dealsbybusiness,this.outletlist,this.isBrand});
+  AppUser({this.id,this.profileimg,this.imageUrlfromStorage,this.brandname,this.description,this.dealsbybusiness,this.outletlist,this.isBrand});
 
   factory AppUser.fromDocument(QueryDocumentSnapshot data) {
-    print('in appuser from document');
-    print(data['brandname']);
-    print(data.id);
-    print(data.reference.id);
-
-
 
     return AppUser(
       brandname: data['brandname'],
       profileimg: data['profileimg'],
+      imageUrlfromStorage: data['imageUrlfromStorage'],
       description: data['descriptiom'],
       isBrand: data['isBrand'],
       outletlist: (data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList(),
@@ -50,6 +46,7 @@ class AppUser{
       'profileimg': profileimg,
       'description': description,
       'isBrand':isBrand,
+      'imageUrlfromStorage':imageUrlfromStorage,
       'outletlist':ConvertCustomStepsToMap(outletlist),
       'id':id
     };

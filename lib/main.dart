@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
             create: (context)=>dealsDataStream,
           ),
           ChangeNotifierProxyProvider<List<Deal>,DealProvider>(
+            
               update: (_,deals,__){
                 return DealProvider(deals);
               }),

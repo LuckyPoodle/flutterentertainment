@@ -26,7 +26,8 @@ class _ProfileState extends State<Profile> {
    dealsbybusiness: [],
    description: 'account description',
    outletlist: [],
-   isBrand: false
+   isBrand: false,
+   imageUrlfromStorage: ''
 
  );
 
@@ -98,7 +99,7 @@ class _ProfileState extends State<Profile> {
                 CircleAvatar(
                   radius: 60,
                   backgroundImage:
-                  NetworkImage(thisappuser.profileimg!=null?thisappuser.profileimg:'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'),
+                  NetworkImage(thisappuser.imageUrlfromStorage.isNotEmpty?thisappuser.imageUrlfromStorage:'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(width: 10,),
@@ -197,7 +198,7 @@ class _ProfileState extends State<Profile> {
                 try {
                  print('to delete.....');
                                           print(chatDocs[index].id);
-                                          auth.deleteDeal(chatDocs[index].id);
+                                          auth.deleteDeal(chatDocs[index].id,chatDocs[index].data()['imageUrlfromStorage']);
                 } catch (error) {
                   //Scaffold.of(context) can't work here as u r updating widget tree, so we use
                   scaffold.showSnackBar(
