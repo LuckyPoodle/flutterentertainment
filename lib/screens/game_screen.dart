@@ -253,7 +253,7 @@ class _GameScreenState extends State<GameScreen> {
             },),
             title:Text("GUESS THE WORD")
         ),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.white,
         body: SafeArea(
 
           child: Column(
@@ -325,7 +325,7 @@ class _GameScreenState extends State<GameScreen> {
                                 tooltip: 'Hint',
                                 iconSize: 39,
                                 icon: Icon(MdiIcons.lightbulb),
-                                color: Colors.yellow,
+                                color: Colors.amber,
                                 disabledColor: Colors.grey,
                                 highlightColor: Colors.transparent,
                                 splashColor: Colors.transparent,

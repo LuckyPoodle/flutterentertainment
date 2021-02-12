@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../utilities/httpexception.dart';
-enum AuthMode { Signup, Login }
+enum AuthMode { Signup, Login,ForgetPassword }
 class AuthCard extends StatefulWidget {
 
   AuthService thisauth;
@@ -67,7 +67,7 @@ class _AuthCardState extends State<AuthCard> {
             ),
           );
         }
-      } else {
+      } else if (_authMode == AuthMode.Signup) {
         // Sign user up
         //await Provider.of<Auth>(context,listen: false).signup(_authData['email'], _authData['password']);
         var user = await widget.thisauth.registerWithEmail(
@@ -84,6 +84,18 @@ class _AuthCardState extends State<AuthCard> {
             ),
           );
         }
+      }else{
+        //reset password
+        await widget.thisauth.resetPassword(_authData['email']);
+        final snackBar = SnackBar(content: Text('Reset password email sent!'));
+
+        // Find the Scaffold in the widget tree and use it to show a SnackBar.
+        Scaffold.of(context).showSnackBar(snackBar);
+        setState(() {
+          _authMode=AuthMode.Login;
+        });
+
+
       }
       // Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
     }on HttpException catch (error){
@@ -131,6 +143,12 @@ class _AuthCardState extends State<AuthCard> {
     }
   }
 
+  void _switchToResetPw(){
+    setState(() {
+      _authMode=AuthMode.ForgetPassword;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -140,7 +158,7 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _authMode == AuthMode.Signup ? 320 : 300,
         constraints:
         BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
@@ -150,6 +168,9 @@ class _AuthCardState extends State<AuthCard> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                if (_authMode==AuthMode.ForgetPassword)
+                  Text('Enter your account email, we will send a reset link',style: TextStyle(fontSize: 20),),
+
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
@@ -164,19 +185,20 @@ class _AuthCardState extends State<AuthCard> {
                     _authData['email'] = value;
                   },
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  controller: _passwordController,
-                  validator: (value) {
-                    if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
-                    }
-                  },
-                  onSaved: (value) {
-                    _authData['password'] = value;
-                  },
-                ),
+               if(_authMode==AuthMode.Signup||_authMode==AuthMode.Login)
+                 TextFormField(
+                   decoration: InputDecoration(labelText: 'Password'),
+                   obscureText: true,
+                   controller: _passwordController,
+                   validator: (value) {
+                     if (value.isEmpty || value.length < 5) {
+                       return 'Password is too short!';
+                     }
+                   },
+                   onSaved: (value) {
+                     _authData['password'] = value;
+                   },
+                 ),
                 if (_authMode == AuthMode.Signup)
                   TextFormField(
                     enabled: _authMode == AuthMode.Signup,
@@ -198,7 +220,7 @@ class _AuthCardState extends State<AuthCard> {
                 else
                   RaisedButton(
                     child:
-                    Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                    _authMode==AuthMode.ForgetPassword?Text('Submit'):Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -216,8 +238,24 @@ class _AuthCardState extends State<AuthCard> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
+                if(_authMode==AuthMode.Signup||_authMode==AuthMode.Login)
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: FlatButton(
+                    onPressed: () {
+                      _switchToResetPw();
+                    },
+                    padding: EdgeInsets.only(right: 0.0),
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                )
               ],
+
             ),
+
           ),
         ),
       ),
@@ -293,7 +331,9 @@ class _AuthScreenState extends State<AuthScreen> {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
+        onPressed: () {
+
+        },
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           'Forgot Password?',
@@ -506,12 +546,11 @@ automaticallyImplyLeading: false,
                       SizedBox(height: 30.0),
                       AuthCard(auth),
 
-                      _buildForgotPasswordBtn(),
 
 
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
-                      _buildSignupBtn(),
+
                     ],
                   ),
                 ),

@@ -13,15 +13,17 @@ class Deal{
   String id;
   String createdBy;
   String region;
+  String brandname;
 
 
-  Deal({this.id,this.dealname,this.longitude,this.latitude,this.imageUrlfromStorage,this.location,this.dealdetails,this.createdBy,this.region,this.imagefile,this.imageUrl});
+  Deal({this.id,this.dealname,this.brandname,this.longitude,this.latitude,this.imageUrlfromStorage,this.location,this.dealdetails,this.createdBy,this.region,this.imagefile,this.imageUrl});
 
   factory Deal.fromDocument(QueryDocumentSnapshot data) {
     return Deal(
       dealname: data.data()['dealname'],
       location: data.data()['location'],
       createdBy: data.data()['userId'],
+      brandname: data.data()['brandname'],
       dealdetails: data.data()['dealdetails'],
         imageUrl: data.data()['imageUrl'],
         imageUrlfromStorage: data.data()['imageUrlfromStorage'],

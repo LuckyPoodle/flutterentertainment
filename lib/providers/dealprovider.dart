@@ -1,8 +1,13 @@
+import 'package:amcollective/utilities/authservice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import '../models/deal.dart';
 
 
 class DealProvider with ChangeNotifier{
+
+  AuthService auth=AuthService();
 
 
   bool thisdealalreadyhasimage=false;
@@ -28,6 +33,12 @@ class DealProvider with ChangeNotifier{
     print(dealsinprovider);
     return dealsinprovider.firstWhere((prod) => prod.id==id);
 }
+
+
+
+
+
+
 
 
 List<Deal> getDealsFrom(String region){

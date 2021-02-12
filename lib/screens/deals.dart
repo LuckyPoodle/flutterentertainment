@@ -1,4 +1,5 @@
 import 'package:amcollective/providers/roleprovider.dart';
+import 'package:amcollective/screens/branddetail.dart';
 import 'package:amcollective/screens/deals_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
@@ -129,14 +130,22 @@ AppUser appuser;
       child:  Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-           Image(
+      FlatButton(
+        onPressed: (){
+          Navigator.of(context).pushNamed(BrandDetailScreen.routeName,arguments:document.createdBy);
+
+
+        },
+        child: Text(document.brandname,style: TextStyle(fontSize: 20),),
+      ),
+      Image(
              fit: BoxFit.contain,
   image: NetworkImage(document.imageUrl.isNotEmpty?document.imageUrl:document.imageUrlfromStorage.isNotEmpty?document.imageUrlfromStorage:''),
 ),
     ListTile(
     leading: Icon(Icons.money, size: 50),
-    title: Text(document.dealname,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-    subtitle: Text(document.dealdetails,style: TextStyle(fontSize: 15),),
+    title: Text(document.dealname,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+    subtitle: Text(document.dealdetails,style: TextStyle(fontSize: 25),),
     ),
     ],
     ),),

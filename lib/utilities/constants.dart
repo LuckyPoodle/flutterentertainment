@@ -144,7 +144,7 @@ const kDialogButtonTextStyle = TextStyle(
 
 const kWordTextStyle = TextStyle(
     fontSize: 57,
-    color: Colors.white,
+    color: Colors.black,
     fontFamily: 'FiraMono',
     letterSpacing: 8);
 

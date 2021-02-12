@@ -1,9 +1,10 @@
+
 import 'package:amcollective/models/deal.dart';
 import 'package:amcollective/utilities/authservice.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../widgets/image_picker.dart';
-
+import '../providers/roleprovider.dart';
 import '../providers/dealprovider.dart';
 import 'package:provider/provider.dart';
 import '../widgets/bottomtab.dart';
@@ -44,6 +45,7 @@ String dropdownValue = 'North';
   final _form=GlobalKey<FormState>();
   var _editedProduct=Deal(id:null,dealname:'', imageUrlfromStorage:'',imagefile:null,region:'',latitude:'',longitude:'',location:'',dealdetails: '',createdBy: '',imageUrl:'');
   var _initValues={
+
     'dealname':'',
     'location':'',
     'dealdetails':'',
@@ -150,7 +152,11 @@ String dropdownValue = 'North';
 
       try {
 
-        
+        String brandname=Provider.of<RoleProvider>(context,listen: false).currentuser.brandname;
+        print('CURRENT USER IS');
+        print(brandname);
+
+        _editedProduct.brandname=brandname;
         _editedProduct.region=dropdownValue;
         _editedProduct.imagefile=_userImageFile;
         bool useralreadyhasimage=Provider.of<DealProvider>(context,listen: false).thisdealalreadyhasimage;
@@ -209,6 +215,9 @@ String dropdownValue = 'North';
       try {
         _editedProduct.region=dropdownValue;
         _editedProduct.imagefile=_userImageFile;
+        String brandname=Provider.of<RoleProvider>(context,listen: false).currentuser.brandname;
+
+        _editedProduct.brandname=brandname;
         bool useralreadyhasimage=Provider.of<DealProvider>(context,listen: false).thisdealalreadyhasimage;
                 print('useralreadyhasimage?');
                 print(useralreadyhasimage);

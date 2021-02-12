@@ -90,6 +90,12 @@ try{
 
 }
 
+Future<void> resetPassword(String email) async{
+  await _auth.sendPasswordResetEmail(email:email);
+  print("Password reset email sent");
+}
+
+
 Future<UserCredential> registerWithEmail(String email, String password) async{
   try {
   UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
@@ -156,6 +162,7 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'dealdetails':deal.dealdetails,
       'location':deal.location,
       'imageUrl':deal.imageUrl,
+      'brandname':deal.brandname,
     
       'imageUrlfromStorage':deal.imageUrlfromStorage,
       'longitude':deal.longitude,
@@ -183,7 +190,7 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
       'dealdetails':deal.dealdetails,
       'location':deal.location,
       'imageUrl':deal.imageUrl,
-   
+      'brandname':deal.brandname,
       'imageUrlfromStorage':deal.imageUrlfromStorage,
       'longitude':deal.longitude,
       'latitude':deal.latitude,
@@ -251,6 +258,14 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
     print('==============in getALLDEALS=====================');
     return q;
   }
+
+Future<DocumentSnapshot> getBrandDetail(String id) async{
+  var snapshot=await _db.collection('users').doc(id).get();
+
+  return snapshot;
+
+}
+
 
   Future<bool> updateUser(AppUser appuser) async{
      print('in updateUser');
