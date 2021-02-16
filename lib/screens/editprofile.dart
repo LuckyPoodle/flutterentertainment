@@ -111,7 +111,10 @@ File _userImageFile;
 
   Future<void> _saveForm() async {
 
-
+    final isValid = _formKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
     _formKey.currentState.save();
         if (Provider.of<RoleProvider>(context,listen: false).uploadedImage==true){
              final ref = FirebaseStorage.instance
@@ -150,7 +153,15 @@ try{
       } finally {
         Provider.of<RoleProvider>(context,listen: false).hasnotuploadedImage();
         Provider.of<RoleProvider>(context,listen: false).getUpdatedUserData();
-        Navigator.of(context, rootNavigator: true).pop();
+        //Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TabsScreen(
+                3
+            ),
+          ),
+        );
       }
         });
         }else{
@@ -179,7 +190,15 @@ try{
       } finally {
         Provider.of<RoleProvider>(context,listen: false).hasnotuploadedImage();
         Provider.of<RoleProvider>(context,listen: false).getUpdatedUserData();
-        Navigator.of(context, rootNavigator: true).pop();
+        //Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TabsScreen(
+                3
+            ),
+          ),
+        );
       }
         }
 
@@ -201,77 +220,13 @@ try{
             onPressed: _saveForm,)
         ],),
       body:SingleChildScrollView(
+        padding: EdgeInsets.all(10),
         child: Form(
             key: _formKey,
             child: Column(
                 children: <Widget>[
                     UserImagePicker(_pickedImage,_editedProduct.imageUrlfromStorage,true),
-                  // Row(
-                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                  //   children: <Widget>[
-                      
-                    
 
-
-                  //     //a container to show image preview
-                  //     Container(
-                  //       width: 100,
-                  //       height: 100,
-                  //       margin: EdgeInsets.only(top:8,right:10,),
-                  //       decoration: BoxDecoration(
-                  //           border: Border.all(
-                  //             width:1,
-                  //             color:Colors.grey,
-                  //           )
-                  //       ),
-                  //       child: _imageUrlController.text.isEmpty?Text('Enter your image url'):
-                  //       FittedBox(child:Image.network(_imageUrlController.text, fit:BoxFit.cover,)),
-
-                  //     ),
-                  //     Expanded(
-                  //       child: TextFormField(
-
-                  //         decoration: InputDecoration(labelText:'Image URL'),
-                  //         keyboardType: TextInputType.url,
-                  //         textInputAction: TextInputAction.done,
-                  //         controller: _imageUrlController,
-                  //         focusNode: _imageUrlFocusNode,
-                  //         onEditingComplete: (){
-                  //           setState(() {
-                  //             //this forces a state change (i.e screen update even though we didnt pass any data to setState)
-                  //             //so that the changed data in textcontroller is bound to the image input being used
-                  //           });
-                  //         },
-                  //         validator: (value){
-                  //           //null is returned when input is correct, return a text when its wrong
-                  //           if(value.isEmpty){
-                  //             return 'Please provide an image';
-                  //           }
-                  //           if (!value.startsWith('http') && !value.startsWith('https')){
-                  //             return 'Please enter a valid URL';
-                  //           }
-                  //           if (!value.endsWith('.png') && !value.endsWith('.jpg') && !value.endsWith('.jpeg')){
-                  //             return 'Please submit a jpg/jpeg/png image';
-                  //           }
-                  //           return null;
-                  //         },
-
-                  //         onSaved: (value){
-
-                  //           _editedProduct=AppUser(
-                  //               description:_editedProduct.description,
-                  //               outletlist: _editedProduct.outletlist,
-                  //               id:_editedProduct.id,
-                  //               dealsbybusiness: _editedProduct.dealsbybusiness,
-                  //               isBrand: _editedProduct.isBrand,
-                  //               profileimg: value);
-                  //         },
-
-                  //       ),
-                  //     ),
-
-                  //   ],),
-                  // Add TextFormFields and ElevatedButton here.
                   TextFormField(
                     initialValue: _initValues['brandname'],
                     decoration:InputDecoration(labelText:'Your Display Name',hintText: 'Display Name'),
@@ -290,6 +245,7 @@ try{
                       if(value.isEmpty){
                         return 'Please provide a value';
                       }
+
                       return null;
                     },
                   ),
@@ -297,7 +253,7 @@ try{
                     initialValue: _initValues['description'],
                     decoration:InputDecoration(labelText:'Description',hintText: 'Description'),
                     keyboardType: TextInputType.multiline,
-
+                    maxLines: 3,
                     onSaved: (value){
                       _editedProduct=AppUser(brandname:_editedProduct.brandname,
                           description:value,
@@ -313,8 +269,8 @@ try{
                         return 'Please provide a value';
                       }
 
-                      if (value.length>300){
-                        return 'Please write less than 300 characters';
+                      if (value.length>100){
+                        return 'Please write less than 100 characters';
                       }
                       return null;
                     },

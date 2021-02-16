@@ -61,11 +61,13 @@ dependencies:
   firebase_admin: ^0.1.4
   image_picker: ^0.6.5+3
   firebase_storage: ^7.0.0
+  font_awesome_flutter: ^8.11.0
 
 
   curved_navigation_bar: ^0.3.7
   url_launcher: ^5.7.10
   google_maps_flutter: ^1.0.3
+ 
 
 dev_dependencies:
   flutter_test:

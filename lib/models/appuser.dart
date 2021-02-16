@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AppUser{
 
   String profileimg;
-  String imageUrlfromStorage;
+  String imageUrlfromStorage='';
   String brandname;
   String description;
   String id;
@@ -46,7 +46,7 @@ class AppUser{
       'profileimg': profileimg,
       'description': description,
       'isBrand':isBrand,
-      'imageUrlfromStorage':imageUrlfromStorage,
+      'imageUrlfromStorage':imageUrlfromStorage==null?'':imageUrlfromStorage,
       'outletlist':ConvertCustomStepsToMap(outletlist),
       'id':id
     };

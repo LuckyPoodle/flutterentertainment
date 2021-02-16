@@ -243,7 +243,7 @@ class _ConsolidatedState extends State<Consolidated> {
                     child: Text('Blogs',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
                   ),
                   Container(
-                    height: 200,
+                    height: 150,
                     child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: categorieslist.map(_categoriesItems).toList()

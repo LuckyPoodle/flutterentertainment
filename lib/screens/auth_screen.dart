@@ -420,12 +420,24 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _buildSocialBtn(
-                () => print('Login with Facebook'),
+        /*   _buildSocialBtn(
+                () async{
+                          var user= await auth.signInWithFacebook();
+                 if (user!=null){
+                   Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (context) => TabsScreen(
+                        1
+                        ),
+                        ),
+                        );
+                 }
+                },
             AssetImage(
               'assets/images/facebook.jpg',
             ),
-          ),
+          ), */
           _buildSocialBtn(
                 () async{
                  var user= await auth.signInWithGoogle();
@@ -492,14 +504,14 @@ automaticallyImplyLeading: false,
         leading: IconButton(icon: Icon(Icons.home),
         onPressed:(){
 
-          Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => TabsScreen(
-                        1
-                        ),
-                        ),
-                        );
+            Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TabsScreen(
+                                        1
+                                    ),
+                                  ),
+                                );
 }),
          
           title:Text('Sign in/Sign up')

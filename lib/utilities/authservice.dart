@@ -9,6 +9,7 @@ import '../models/address.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
+
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -68,6 +69,8 @@ Stream<User> get user => FirebaseAuth.instance.authStateChanges();
           // Once signed in, return the UserCredential
           return result;
 }
+
+  
 
 Future<UserCredential> signInWithEmail(String email, String password) async{
 try{
@@ -132,7 +135,7 @@ Future<UserCredential> registerWithEmail(String email, String password) async{
             .collection('users')
             .doc(user.user.uid)
             .set({
-        'brandname':user.user.displayName,
+        'brandname':user.user.displayName!=null?user.user.displayName:'Guest',
         'profileimg':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/330px-SNice.svg.png',
         'description':'Brand description',
         'outletlist':[],
@@ -290,17 +293,16 @@ Future<AppUser> getAppUserData() async{
      if (_auth.currentUser!=null){
        print('_______________________________________________in authservice USER IS LOGGED IN__________________________________________________________');
        var snapshot=await _db.collection('users').doc(_auth.currentUser.uid).get();
-       print(snapshot);
+       print(snapshot.data());
        var data=snapshot.data();
-       var isbrand=data['role']=='brand';
+       var isbrand=data['isBrand'];
        String brandname=data['brandname'];
        String description=data['description'];
        String profileimg=data['profileimg'];
        String imageUrlfromStorage=data['imageUrlfromStorage'];
        var outlistlist=(data['outletlist'] as List??[]).map((v)=>PlaceLocation.fromMap(v)).toList();
        print('outletlist');
-       print(outlistlist);
-       print(outlistlist[0]);
+      
 
        //(data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
        var dealsbybusiness=data['dealsbybusiness'];

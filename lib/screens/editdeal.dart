@@ -371,6 +371,9 @@ String dropdownValue = 'North';
                     if(value.length<10){
                       return 'Please write at least 10 characters for description';
                     }
+                    if (value.length>300){
+                      return 'Please write less than 300 characters';
+                    }
                     return null;
                   },
 
@@ -434,11 +437,8 @@ String dropdownValue = 'North';
                     if(value.isEmpty){
                       return 'Please provide a value';
                     }
-
                     return null;
                   },
-
-
                 ),
                    SizedBox(height: 10,),
                 Text('Deal region'),
@@ -486,6 +486,7 @@ String dropdownValue = 'North';
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
                         onEditingComplete: () async{
+                          Provider.of<DealProvider>(context,listen: false).dealalreadyhasimage();
                           setState(() {
                             //this forces a state change (i.e screen update even though we didnt pass any data to setState)
                             //so that the changed data in textcontroller is bound to the image input being used
@@ -498,7 +499,6 @@ String dropdownValue = 'North';
                                         //linktodelete.delete();
                                         //print(linktodelete.toString());
                                         FirebaseStorage.instance.ref(linktodelete.fullPath.toString()).delete();
-
 
                                         print('deleted image file from storage :)');
                                         return true;

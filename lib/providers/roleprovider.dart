@@ -8,7 +8,7 @@ class RoleProvider with ChangeNotifier{
   bool userRoleisBrand=false;
   AuthService authService=AuthService();
   AppUser currentuser=AppUser(
-  brandname: 'username',
+  brandname: 'Guest',
   dealsbybusiness: [],
   description: 'account description',
   outletlist: [],
@@ -33,14 +33,14 @@ class RoleProvider with ChangeNotifier{
 
   Future<AppUser> getUserData() async{
     print('IN GET USER DATA IN ROLEPROVIDER');
-    if (currentuser.brandname=='username'){
+  
       currentuser=await authService.getAppUserData();
       print('current user is now ');
       print(currentuser.brandname);
       
       notifyListeners();
       return currentuser;
-    }
+    
   }
   Future<AppUser> getUpdatedUserData() async{
     print('IN GET UPDATE USER DATA IN ROLEPROVIDER');
@@ -55,7 +55,7 @@ class RoleProvider with ChangeNotifier{
 
   void signOut(){
     currentuser=AppUser(
-      brandname: 'username',
+      brandname: 'Guest',
       dealsbybusiness: [],
       description: 'account description',
       outletlist: [],

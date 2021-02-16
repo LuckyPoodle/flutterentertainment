@@ -67,19 +67,20 @@ class _TabsScreenState extends State<TabsScreen> {
 
 
       appBar: AppBar(
-        leading: IconButton(
+       /* leading: IconButton(
           icon: Icon(Icons.menu,color: Colors.white,),
           onPressed: () {
             _scaffoldKey.currentState.openDrawer();
           },
-        ),
+        ),*/
+        automaticallyImplyLeading: false,
           flexibleSpace: Container(
             alignment: Alignment.center,
             color: Colors.black
             ,
             child: Text('AMCOLLECTIVE',style: TextStyle(
               color: Colors.white,
-              letterSpacing: 5.0,
+              letterSpacing: 2.0,
               fontSize: 30.0,
               fontWeight: FontWeight.bold
             ),),
@@ -101,7 +102,7 @@ class _TabsScreenState extends State<TabsScreen> {
           ],
           color: Colors.black,
           buttonBackgroundColor: Colors.black,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
           animationCurve: Curves.easeInOut,
           animationDuration: Duration(milliseconds: 600),
           onTap: _selectPage,
@@ -114,106 +115,3 @@ class _TabsScreenState extends State<TabsScreen> {
 }
 
 
-
-
-
-
-
-
-
-//class BottomTab extends StatelessWidget {
-//
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    var controlindex = Provider.of<SelectedCategory>(context);
-//    int _page=controlindex.selectedIndex;
-//    GlobalKey _bottomNavigationKey=GlobalKey();
-//    return CurvedNavigationBar(
-//      key: _bottomNavigationKey,
-//      index: 0,
-//      height: 50.0,
-//      items: <Widget>[
-//        Icon(Icons.dashboard, size: 30,color: Colors.white,),
-//        Icon(Icons.star, size: 30,color: Colors.white,),
-//        Icon(Icons.videogame_asset, size: 30,color: Colors.white,),
-//        Icon(Icons.perm_identity, size: 30,color: Colors.white,),
-//
-//      ],
-//      color: Colors.black,
-//      buttonBackgroundColor: Colors.black,
-//      backgroundColor: Colors.white,
-//      animationCurve: Curves.easeInOut,
-//      animationDuration: Duration(milliseconds: 600),
-//      onTap: (index) {
-//
-//       controlindex.changeSelectedIndex(index);
-//       if (index==0){
-//         Navigator.of(context).pushReplacementNamed('/');
-//
-//       }else if (index==1){
-//        // Navigator.of(context).pushReplacementNamed(Deals.routeName);
-//       }
-//      },
-//      letIndexChange: (index) => true,
-//    );
-//
-//  }
-//}
-
-//    return ClipRRect(
-//        borderRadius: BorderRadius.only(
-//          topLeft: Radius.circular(30.0),
-//          topRight: Radius.circular(30.0),
-//        ),
-//        child: BottomNavigationBar(
-//          type: BottomNavigationBarType.fixed,
-//          items: [
-//            BottomNavigationBarItem(
-//              icon: Icon(
-//                Icons.dashboard,
-//                size: 30.0,
-//                color: Colors.black,
-//              ),
-//              title: Text(''),
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(
-//                Icons.star,
-//                size: 30.0,
-//                color: Colors.grey,
-//
-//              ),
-//              label: 'Deal',
-//
-//
-//            ),
-//
-//            BottomNavigationBarItem(
-//              icon: Icon(
-//                Icons.videogame_asset,
-//                size: 30.0,
-//                color: Colors.grey,
-//              ),
-//              title: Text(''),
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(
-//                Icons.person_outline,
-//                size: 30.0,
-//                color: Colors.grey,
-//              ),
-//              title: Text(''),
-//            ),
-//          ],
-//        ))
-
-
-//decoration: BoxDecoration(
-//gradient: LinearGradient(
-//colors: [Colors.blueGrey, Colors.black],
-//begin: Alignment.bottomRight,
-//end: Alignment.topLeft,
-//),
-//
-//)

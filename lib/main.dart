@@ -80,6 +80,8 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.white,
           accentColor: Colors.black,
           buttonColor: Colors.black,
+          backgroundColor: Color.fromRGBO(240, 245, 251, 1),
+
           fontFamily: 'Lato',
 
         ),
