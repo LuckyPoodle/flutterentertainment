@@ -75,7 +75,7 @@ class NetworkHelper {
         //print(decodedData[i]['jetpack_featured_media_url']);
         String urlimage='';
         if (decodedData[i]['jetpack_featured_media_url']==null){
-          urlimage=decodedData[i]['_embedded']['wp:featuredmedia'][0]['source_url'];
+          urlimage=decodedData[i]['_embedded']['wp:featuredmedia']==null?'':decodedData[i]['_embedded']['wp:featuredmedia'][0]['source_url'];
         }else{
           urlimage=decodedData[i]['jetpack_featured_media_url'];
         }

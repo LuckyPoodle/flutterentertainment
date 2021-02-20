@@ -7,6 +7,7 @@ import 'package:amcollective/screens/editprofile.dart';
 import 'package:amcollective/screens/game.dart';
 import 'package:amcollective/screens/games_overall.dart';
 import 'package:amcollective/screens/branddetail.dart';
+import 'package:amcollective/screens/nonfeaturedblogs.dart';
 import 'package:amcollective/screens/profile.dart';
 import './screens/dealbycondition.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
@@ -98,7 +99,8 @@ class MyApp extends StatelessWidget {
           EditProfileScreen.routeName:(ctx)=>EditProfileScreen(),
           DealsMapScreen.routeName:(ctx)=>DealsMapScreen(),
           DealsByConditionScreen.routeName:(ctx)=>DealsByConditionScreen(),
-          BrandDetailScreen.routeName:(ctx)=>BrandDetailScreen()
+          BrandDetailScreen.routeName:(ctx)=>BrandDetailScreen(),
+          NonFeaturedBlogsScreen.routeName:(ctx)=>NonFeaturedBlogsScreen()
         },
       ),
       );

@@ -11,15 +11,15 @@ import '../widgets/article_tile.dart';
 import 'package:amcollective/widgets/bottomtab.dart';
 import '../models/article_model.dart';
 
-class BlogPage extends StatefulWidget {
+class NonFeaturedBlogsScreen extends StatefulWidget {
 
-  static const routeName='/blog-page';
+  static const routeName='/nonfeatured-page';
 
   @override
-  _BlogPageState createState() => _BlogPageState();
+  _NonFeaturedBlogsScreenState createState() => _NonFeaturedBlogsScreenState();
 }
 
-class _BlogPageState extends State<BlogPage> {
+class _NonFeaturedBlogsScreenState extends State<NonFeaturedBlogsScreen> {
   ScrollController categorytilesscrollController = ScrollController();
   ScrollController postscrollController = ScrollController();
 
@@ -35,18 +35,18 @@ class _BlogPageState extends State<BlogPage> {
     _loading = true;
     print("init");
 
-      Provider.of<SelectedCategory>(context, listen: false)
-          .fetchArticles(false)
-          .then((value) {
-        print("heyy in blogpage");
+    Provider.of<SelectedCategory>(context, listen: false)
+        .fetchFromNonFeaturedBlogs(false)
+        .then((value) {
+      print("heyy in nonfeatured");
 
-        print(value);
-        setState(() {
+      print(value);
+      setState(() {
 
-          _loading = false;
-        });
-        //Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
+        _loading = false;
       });
+      //Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
+    });
 
 
   }
@@ -55,7 +55,7 @@ class _BlogPageState extends State<BlogPage> {
   void dispose() {
     super.dispose();
     print('dispose');
-    
+
 
 
   }
@@ -84,43 +84,14 @@ class _BlogPageState extends State<BlogPage> {
 //
 //  }
 
-  bool onNotification(ScrollNotification notification) {
-    if (categorytilesscrollController.hasClients) {
-      if (categorytilesscrollController.positions.length > 0) {
-        //print('CATEGORY!!');
-        //print(categorytilesscrollController.position);
-      }
-    }
-    if (postscrollController.hasClients) {
-      if (notification is ScrollUpdateNotification) {
-        //print('is update!!!!!!!!!!!');
-      }
-      //print('hYEYEE');
-
-      if (postscrollController.positions.length > 0) {
-        if (notification.metrics.pixels ==
-            notification.metrics.maxScrollExtent) {
-          //print('REAHED POOST ENDDDDDD!!');
-
-          //currentPage+=1;
-//          getArticles(currentPage+1);
-//          currentPage+=1;
-        }
-      }
-    }
-
-    return true;
-  }
 
   void _pressbutton() {
     setState(() {
       _pressloadmore=true;
     });
     Provider.of<SelectedCategory>(context, listen: false).addPagenum();
-    print("current page now pres sbutton become ");
-    print(Provider.of<SelectedCategory>(context, listen: false)
-        .currentpagenumber);
-    Provider.of<SelectedCategory>(context, listen: false).fetchArticles(true).then((_){
+
+    Provider.of<SelectedCategory>(context, listen: false).fetchFromNonFeaturedBlogs(true).then((_){
       setState(() {
         _pressloadmore=false;
       });
@@ -133,12 +104,12 @@ class _BlogPageState extends State<BlogPage> {
     final categoryprovider = Provider.of<SelectedCategory>(context);
 
 
-    articlelisttoshow = categoryprovider.providerArticles;
+    articlelisttoshow = categoryprovider.nonFeaturedArticles;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: true,
-            title:Text(Provider.of<SelectedCategory>(context, listen: false).category)
+            title:Text('Latest Posts from blogs')
         ),
 
         body: ListView(

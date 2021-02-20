@@ -1,5 +1,6 @@
 import 'package:amcollective/models/category_model.dart';
 import 'package:amcollective/screens/blogpage.dart';
+import 'package:amcollective/screens/nonfeaturedblogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -45,7 +46,7 @@ class _ConsolidatedState extends State<Consolidated> {
       });
 
     }else{
-      Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(false).then((_){
+      Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(false).then((_){
         setState(() {
           _loading=false;
         });
@@ -102,7 +103,7 @@ class _ConsolidatedState extends State<Consolidated> {
     print("current page now pres sbutton become ");
     print(Provider.of<SelectedCategory>(context, listen: false)
         .currentpagenumber);
-    Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(true).then((_){
+    Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(true).then((_){
       setState(() {
         _pressloadmore=false;
       });
@@ -114,7 +115,7 @@ class _ConsolidatedState extends State<Consolidated> {
       _loading=true;
     });
 
-    await Provider.of<SelectedCategory>(context, listen: false).fetchFromAllBlog(true).then((_){
+    await Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(true).then((_){
       setState(() {
         _loading=false;
       });
@@ -167,7 +168,8 @@ class _ConsolidatedState extends State<Consolidated> {
     return GestureDetector(
       onTap: (){
         Provider.of<SelectedCategory>(context,listen: false).changeCategory(data.categoryName);
-        Navigator.of(context).pushNamed(BlogPage.routeName);
+        Navigator.of(context).pushNamed(BlogPage.routeName,arguments:'specificblog');
+
       },
       child: Padding(
 
@@ -192,6 +194,8 @@ class _ConsolidatedState extends State<Consolidated> {
   }
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     final size=MediaQuery.of(context).size;
     final categoryprovider = Provider.of<SelectedCategory>(context);
     featureSection=categoryprovider.latestArticlefromEachBlog;
@@ -252,54 +256,77 @@ class _ConsolidatedState extends State<Consolidated> {
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Latest Posts',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+                    child: Text('Latest from Featured',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: height*0.6, minHeight: 100),
+                    child:
+                  ListView(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      children: <Widget>[
+                        Column(
+                          children:
+                          <Widget>[
+                            ListView.builder(
+                                itemCount: allthearticles.length,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                physics: ScrollPhysics(),
+
+                                itemBuilder: (context, index) {
+                                  return ArticleTile(
+                                    id:allthearticles[index].id,
+                                    blogname: allthearticles[index].blogname,
+                                    date: allthearticles[index].publishedAt ??
+                                        "",
+                                    imgUrl:
+                                    allthearticles[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
+                                    title: allthearticles[index].title ?? "",
+                                    desc:
+                                    allthearticles[index].shortdesc ?? "",
+                                    content:
+                                    allthearticles[index].content ?? "",
+                                    posturl:
+                                    allthearticles[index].articleUrl ?? "",
+                                    modifiedby:
+                                    allthearticles[index].modifiedby ?? "",
+                                  );
+                                }),
+                            TextButton(style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.black,
+                                textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
+                                onPressed: _pressbutton, child: Text('LOAD MORE')),
+                            SizedBox(height: 10,),
+                            _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
+                            SizedBox(height: 80,)
+                          ],
+                        ),
+                      ],
+                    )
+                    ,
                   ),
 
-                  ListView(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    children: <Widget>[
-                      Column(
-                        children:
-                        <Widget>[
-                          ListView.builder(
-                              itemCount: allthearticles.length,
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              physics: ScrollPhysics(),
+                  SizedBox(height: 20,),
 
-                              itemBuilder: (context, index) {
-                                return ArticleTile(
-                                  id:allthearticles[index].id,
-                                  blogname: allthearticles[index].blogname,
-                                  date: allthearticles[index].publishedAt ??
-                                      "",
-                                  imgUrl:
-                                  allthearticles[index].urlToImage ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Smiley_green_alien_KO.svg/163px-Smiley_green_alien_KO.svg.png",
-                                  title: allthearticles[index].title ?? "",
-                                  desc:
-                                  allthearticles[index].shortdesc ?? "",
-                                  content:
-                                  allthearticles[index].content ?? "",
-                                  posturl:
-                                  allthearticles[index].articleUrl ?? "",
-                                  modifiedby:
-                                  allthearticles[index].modifiedby ?? "",
-                                );
-                              }),
-                          TextButton(style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.black,
-                              textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
-                              onPressed: _pressbutton, child: Text('LOAD MORE')),
-                          SizedBox(height: 10,),
-                          _pressloadmore?CircularProgressIndicator():SizedBox(height: 1,),
-                          SizedBox(height: 80,)
-                        ],
-                      ),
-                    ],
-                  )
-
+                  Container(
+                    width: width*0.8,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      boxShadow:  [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      border: Border.all(width: 0),),
+                    child: FlatButton(child: Text('Read latest from other blogs',style: TextStyle(color: Colors.white)),onPressed: (){
+                      Navigator.of(context).pushNamed(NonFeaturedBlogsScreen.routeName);
+                    },),),
+                  SizedBox(height: 100,)
 
                 ],
               ),

@@ -10,6 +10,7 @@ class SelectedCategory with ChangeNotifier{
   String category='Alvinology';
   List<Article> providerArticles=[];
   List<Article> combinedArticles=[];
+  List<Article> nonFeaturedArticles=[];
   List<Article> latestArticlefromEachBlog=[];
 
   int currentpagenumber=1;
@@ -97,11 +98,86 @@ class SelectedCategory with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<List<Article>> fetchFromNonFeaturedBlogs(bool nextpage) async{
+    if (nextpage!=true){
+      nonFeaturedArticles.clear();
+      currentpagenumber=1;
+    }
+
+    List<Article> templist=[];
+    String pagenumber=currentpagenumber.toString();
+
+
+//from lemonfilm
+    NetworkHelper networkHelper2=NetworkHelper('https://lemon-film.com/wp-json/wp/v2/posts?page=$pagenumber');
+    await networkHelper2.getData('Lemon-Film');
+
+    templist.addAll(networkHelper2.listofarticlescurrent);
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper2.listofarticlescurrent[0]);
+    }
+
+
+    //from mylovelyblueskies
+    NetworkHelper networkHelper5=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper5.getData('My Lovely Blue Sky');
+
+    templist.addAll(networkHelper5.listofarticlescurrent);
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper5.listofarticlescurrent[0]);
+    }
+
+    //Salary.sg
+    NetworkHelper networkHelper6=NetworkHelper('https://www.salary.sg//wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper6.getData('Salary.sg');
+
+    templist.addAll(networkHelper6.listofarticlescurrent);
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper6.listofarticlescurrent[0]);
+    }
+    //Juneunicorn
+    NetworkHelper networkHelper7=NetworkHelper('http://juneunicorn.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper7.getData('Juneunicorn');
+
+    templist.addAll(networkHelper7.listofarticlescurrent);
+
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper7.listofarticlescurrent[0]);
+    }
+
+    //travelintern
+    NetworkHelper networkHelper8=NetworkHelper('https://thetravelintern.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper8.getData('Juneunicorn');
+
+    templist.addAll(networkHelper8.listofarticlescurrent);
+
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper8.listofarticlescurrent[0]);
+    }
+
+
+    print('FETCH FINISHED!!!!!!!!!!!!!!!!!');
+
+    templist.sort((a,b)=>b.dateforcomparison.compareTo(a.dateforcomparison));
+
+    nonFeaturedArticles.addAll(templist);
+
+    notifyListeners();
+
+
+    return nonFeaturedArticles;
+
+
+    notifyListeners();
+    return combinedArticles;
+
+
+  }
 
 
 
 
-  Future<List<Article>> fetchFromAllBlog(bool nextpage) async{
+  Future<List<Article>> fetchFromFeaturedBlogs(bool nextpage) async{
     if (nextpage!=true){
       combinedArticles.clear();
       currentpagenumber=1;
@@ -118,14 +194,7 @@ class SelectedCategory with ChangeNotifier{
     if(nextpage!=true){
       latestArticlefromEachBlog.add(networkHelper.listofarticlescurrent[0]);
     }
-//from lemonfilm
-    NetworkHelper networkHelper2=NetworkHelper('https://lemon-film.com/wp-json/wp/v2/posts?page=$pagenumber');
-    await networkHelper2.getData('Lemon-Film');
 
-    templist.addAll(networkHelper2.listofarticlescurrent);
-    if(nextpage!=true){
-      latestArticlefromEachBlog.add(networkHelper2.listofarticlescurrent[0]);
-    }
 
     //from ricemedia
     NetworkHelper networkHelper3=NetworkHelper('https://ricemedia.co/wp-json/wp/v2/posts?page=$pagenumber');
@@ -146,26 +215,8 @@ class SelectedCategory with ChangeNotifier{
     }
 
 
-    //from mylovelyblueskies
-    NetworkHelper networkHelper5=NetworkHelper('https://mylovelybluesky.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
-    await networkHelper5.getData('My Lovely Blue Sky');
 
-    templist.addAll(networkHelper5.listofarticlescurrent);
-    if(nextpage!=true){
-      latestArticlefromEachBlog.add(networkHelper5.listofarticlescurrent[0]);
-    }
-
-
-    //Salary.sg
-    NetworkHelper networkHelper6=NetworkHelper('https://www.salary.sg//wp-json/wp/v2/posts?page=$pagenumber&_embed');
-    await networkHelper6.getData('Salary.sg');
-
-    templist.addAll(networkHelper6.listofarticlescurrent);
-    if(nextpage!=true){
-      latestArticlefromEachBlog.add(networkHelper6.listofarticlescurrent[0]);
-    }
-
-    print('FETCH FINISHED!!!!!!!!!!!!!!!!!');
+    print('FETCH FINISHED from featured blogs!!!!!!!!!!!!!!!!!');
 
     templist.sort((a,b)=>b.dateforcomparison.compareTo(a.dateforcomparison));
 
@@ -182,6 +233,8 @@ class SelectedCategory with ChangeNotifier{
 
 
   }
+
+
 
   Future<List<Article>> fetchArticles(bool nextpage) async{
 
