@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amcollective/models/ScreenArguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
@@ -27,23 +28,16 @@ class _PostDetailState extends State<PostDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-
-
 
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    productId=ModalRoute.of(context).settings.arguments as String;
-    loadedProduct=Provider.of<SelectedCategory>(context,listen:false).findById(productId);
+
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+
+    loadedProduct=Provider.of<SelectedCategory>(context,listen:false).findById(args.origin,args.id);
     webview=loadedProduct.blogname=='RiceMedia';
     return
       webview?

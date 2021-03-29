@@ -35,21 +35,43 @@ class _NonFeaturedBlogsScreenState extends State<NonFeaturedBlogsScreen> {
     _loading = true;
     print("init");
 
-    Provider.of<SelectedCategory>(context, listen: false)
-        .fetchFromNonFeaturedBlogs(false)
-        .then((value) {
-      print("heyy in nonfeatured");
+   if (Provider.of<SelectedCategory>(context, listen: false).nonFeaturedArticles.length>0){
+     print("heyy in nonfeatured, already have content");
+     setState(() {
 
-      print(value);
-      setState(() {
+       _loading = false;
+     });
+   }else{
+     Provider.of<SelectedCategory>(context, listen: false)
+         .fetchFromNonFeaturedBlogs(false)
+         .then((value) {
+       print("heyy in nonfeatured, do not already have content");
 
-        _loading = false;
-      });
-      //Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
-    });
+       print(value);
+       setState(() {
+
+         _loading = false;
+       });
+       //Provider.of<SelectedCategory>(context, listen: false).updateLocation('blogpage');
+     });
+   }
 
 
   }
+
+
+  Future<void> _refreshNonFeaturedPage(BuildContext context) async {
+    setState(() {
+      _loading=true;
+    });
+
+    await Provider.of<SelectedCategory>(context, listen: false).fetchFromNonFeaturedBlogs(false).then((_){
+      setState(() {
+        _loading=false;
+      });
+    });
+  }
+
 
   @override
   void dispose() {
@@ -112,21 +134,20 @@ class _NonFeaturedBlogsScreenState extends State<NonFeaturedBlogsScreen> {
             title:Text('Latest Posts from blogs')
         ),
 
-        body: ListView(
+        body: _loading? Center(
+    child: SpinKitChasingDots(
+    color:Colors.black,
+    size: 100.0,
+    ),
+    ) :
+    RefreshIndicator(
+    onRefresh: ()=>_refreshNonFeaturedPage(context),
+
+    child:ListView(
           children: <Widget>[
             Column(
 
-              children: _loading
-                  ? <Widget>[
-                SizedBox(height:100.0),
-                Center(
-                  child: SpinKitChasingDots(
-                    color:Colors.black,
-                    size: 100.0,
-                  ),
-                )
-              ]
-                  : <Widget>[
+              children:  <Widget>[
                 ListView.builder(
                     itemCount: articlelisttoshow.length,
                     scrollDirection: Axis.vertical,
@@ -135,6 +156,7 @@ class _NonFeaturedBlogsScreenState extends State<NonFeaturedBlogsScreen> {
                     controller: postscrollController,
                     itemBuilder: (context, index) {
                       return ArticleTile(
+                        origin: 'nonfeatured',
                         id:articlelisttoshow[index].id,
                         blogname: articlelisttoshow[index].blogname,
                         date: articlelisttoshow[index].publishedAt ??
@@ -166,9 +188,9 @@ class _NonFeaturedBlogsScreenState extends State<NonFeaturedBlogsScreen> {
             ),
           ],
         ),
-      ),
+      ))
     );
-  }
+    }
 }
 
 

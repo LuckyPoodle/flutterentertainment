@@ -1,10 +1,10 @@
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:html/parser.dart' show parse;
-import 'package:html/dom.dart';
+
 import 'dart:convert';
 import '../models/article_model.dart';
-import 'package:provider/provider.dart';
+
 
 
 
@@ -52,6 +52,28 @@ class NetworkHelper {
 
   }
 
+  String extractFirstUrl(String str){
+    int start=str.indexOf('src');
+    print(start);
+    String url='';
+
+    if (start>0){
+      for (int i=start+5;i<str.length;i++){
+        if (str[i]!='"'){
+          url+=str[i];
+        }else{
+          print('extracted');
+          print(url);
+          return url;
+
+        }
+
+      }
+    }else{
+      return url;
+    }
+  }
+
 
   Future<void> getData(String blogname) async {
     //print('fetching data');
@@ -75,11 +97,17 @@ class NetworkHelper {
         //print(decodedData[i]['jetpack_featured_media_url']);
         String urlimage='';
         if (decodedData[i]['jetpack_featured_media_url']==null){
-          urlimage=decodedData[i]['_embedded']['wp:featuredmedia']==null?'':decodedData[i]['_embedded']['wp:featuredmedia'][0]['source_url'];
+          if (decodedData[i]['_embedded']['wp:featuredmedia']==null){
+            urlimage=extractFirstUrl(decodedData[i]['content']['rendered']);
+
+          }else{
+            urlimage=decodedData[i]['_embedded']['wp:featuredmedia'][0]['source_url'];
+          }
         }else{
           urlimage=decodedData[i]['jetpack_featured_media_url'];
         }
-        blogname=blogname;
+        blogname=decodedData[i]['_embedded']['author']==null?'AMCollective':decodedData[i]['_embedded']['author'][0]['name'];
+
 
         Article article=Article(
           id:id,

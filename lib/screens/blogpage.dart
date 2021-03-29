@@ -131,8 +131,6 @@ class _BlogPageState extends State<BlogPage> {
   Widget build(BuildContext context) {
     //listener
     final categoryprovider = Provider.of<SelectedCategory>(context);
-
-
     articlelisttoshow = categoryprovider.providerArticles;
     return SafeArea(
       child: Scaffold(
@@ -164,6 +162,7 @@ class _BlogPageState extends State<BlogPage> {
                     controller: postscrollController,
                     itemBuilder: (context, index) {
                       return ArticleTile(
+                        origin: 'blogpage',
                         id:articlelisttoshow[index].id,
                         blogname: articlelisttoshow[index].blogname,
                         date: articlelisttoshow[index].publishedAt ??

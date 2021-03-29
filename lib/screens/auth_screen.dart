@@ -17,10 +17,7 @@ enum AuthMode { Signup, Login,ForgetPassword }
 class AuthCard extends StatefulWidget {
 
   AuthService thisauth;
-
   AuthCard(this.thisauth);
-
-
   @override
   _AuthCardState createState() => _AuthCardState();
 }
@@ -420,24 +417,7 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-        /*   _buildSocialBtn(
-                () async{
-                          var user= await auth.signInWithFacebook();
-                 if (user!=null){
-                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => TabsScreen(
-                        1
-                        ),
-                        ),
-                        );
-                 }
-                },
-            AssetImage(
-              'assets/images/facebook.jpg',
-            ),
-          ), */
+
           _buildSocialBtn(
                 () async{
                  var user= await auth.signInWithGoogle();

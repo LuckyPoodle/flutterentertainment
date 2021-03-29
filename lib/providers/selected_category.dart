@@ -22,6 +22,9 @@ class SelectedCategory with ChangeNotifier{
     CategoryModel('SethLui','assets/images/sethlui.JPG'),
     CategoryModel('My Lovely Blue Sky','assets/images/blusky.JPG'),
     CategoryModel('Salary.sg','assets/images/salary.JPG'),
+    CategoryModel('The Travel Intern','assets/images/The-Travel-Intern-Logo.png'),
+    CategoryModel('Travel Inspiration 360','assets/images/Travel-Inspiration-360.png'),
+    CategoryModel('Juneunicorn','assets/images/juneunicorn.JPG')
   ];
 
 
@@ -38,23 +41,24 @@ class SelectedCategory with ChangeNotifier{
 
 
 
-  Article findById(String id){
-//    if (screenlocation=='consolidated'){
-//      print('FIND IN COMBINEDARTICLES');
-//      return combinedArticles.firstWhere((prod) => prod.id==id);
-//    }else if (screenlocation=='blogpage')
-//      print('FIND IN BLOGPAGE');{
-//      return providerArticles.firstWhere((prod) => prod.id==id);
-//    }
+  Article findById(String requestorigin,String id){
 
-  Article target=combinedArticles.firstWhere((prod) => prod.id==id);
-
-  if (target ==''){
-    print('FINDING IN PROVIDER!!!!!!!!!!!');
-    target=providerArticles.firstWhere((prod) => prod.id==id);
+  if (requestorigin=='toprow' || requestorigin=='mainpage'){
+    Article target=combinedArticles.firstWhere((prod) => prod.id==id);
+    return target;
   }
 
+
+  if (requestorigin =='blogpage'){
+    print('FINDING IN PROVIDER!!!!!!!!!!!');
+    Article target=providerArticles.firstWhere((prod) => prod.id==id);
     return target;
+  }
+
+  if (requestorigin=='nonfeatured'){
+    Article target=nonFeaturedArticles.firstWhere((prod)=>prod.id==id);
+    return target;
+  }
   }
 
 
@@ -147,13 +151,23 @@ class SelectedCategory with ChangeNotifier{
 
     //travelintern
     NetworkHelper networkHelper8=NetworkHelper('https://thetravelintern.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
-    await networkHelper8.getData('Juneunicorn');
+    await networkHelper8.getData('The Travel Intern');
 
     templist.addAll(networkHelper8.listofarticlescurrent);
 
     if(nextpage!=true){
       latestArticlefromEachBlog.add(networkHelper8.listofarticlescurrent[0]);
     }
+
+    NetworkHelper networkHelper9=NetworkHelper('https://travelinspiration360.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper9.getData('Travel Inspiration 360');
+
+    templist.addAll(networkHelper9.listofarticlescurrent);
+
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper9.listofarticlescurrent[0]);
+    }
+
 
 
     print('FETCH FINISHED!!!!!!!!!!!!!!!!!');
@@ -172,6 +186,34 @@ class SelectedCategory with ChangeNotifier{
     return combinedArticles;
 
 
+  }
+
+  Future<List<Article>> fetchFromOxygen(bool nextpage) async{
+    if (nextpage!=true){
+      combinedArticles.clear();
+      currentpagenumber=1;
+    }
+
+    List<Article> templist=[];
+    String pagenumber=currentpagenumber.toString();
+
+    //https://local.sgprophub.com/wp-json/wp/v2/posts?page=$pagenumber&_embed
+    NetworkHelper networkHelper=NetworkHelper('https://local.sgprophub.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+    await networkHelper.getData('AMCollective');
+
+    templist.addAll(networkHelper.listofarticlescurrent);
+    if(nextpage!=true){
+      latestArticlefromEachBlog.add(networkHelper.listofarticlescurrent[0]);
+      latestArticlefromEachBlog.add(networkHelper.listofarticlescurrent[1]);
+      latestArticlefromEachBlog.add(networkHelper.listofarticlescurrent[2]);
+    }
+
+    combinedArticles.addAll(templist);
+
+    notifyListeners();
+
+
+    return combinedArticles;
   }
 
 
@@ -290,6 +332,21 @@ class SelectedCategory with ChangeNotifier{
       NetworkHelper networkHelper=NetworkHelper('https://www.salary.sg/wp-json/wp/v2/posts?page=$pagenumber&_embed');
       await networkHelper.getData('Salary.sg');
       providerArticles.addAll(networkHelper.listofarticlescurrent);
+    }else if (category=='Travel Inspiration 360'){
+      NetworkHelper networkHelper9=NetworkHelper('https://travelinspiration360.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+      await networkHelper9.getData('Travel Inspiration 360');
+      providerArticles.addAll(networkHelper9.listofarticlescurrent);
+    }else if (category=='The Travel Intern'){
+      NetworkHelper networkHelper8=NetworkHelper('https://thetravelintern.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+      await networkHelper8.getData('The Travel Intern');
+      providerArticles.addAll(networkHelper8.listofarticlescurrent);
+    }else if (category=='Juneunicorn'){
+
+      NetworkHelper networkHelper7=NetworkHelper('http://juneunicorn.com/wp-json/wp/v2/posts?page=$pagenumber&_embed');
+      await networkHelper7.getData('Juneunicorn');
+      providerArticles.addAll(networkHelper7.listofarticlescurrent);
+
+
     }
 
 

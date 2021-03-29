@@ -1,11 +1,12 @@
+import 'package:amcollective/models/ScreenArguments.dart';
 import 'package:flutter/material.dart';
 import '../screens/PostDetail.dart';
 
 class ArticleTile extends StatelessWidget {
   final String imgUrl, title, desc,content,posturl,date,modifiedby,blogname;
-  final String id;
+  final String id,origin;
 
-  ArticleTile({this.blogname,this.id,this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
+  ArticleTile({this.blogname,this.origin,this.id,this.imgUrl, this.desc, this.title, this.content, @required this.posturl,this.date,this.modifiedby});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,10 @@ class ArticleTile extends StatelessWidget {
                     icon: Icon(Icons.menu_book),
                     iconSize: 50.0,
                     alignment: Alignment.bottomRight,
-                    onPressed: () => Navigator.of(context).pushNamed(PostDetail.routeName,arguments:id),
+                    onPressed: () => Navigator.of(context).pushNamed(PostDetail.routeName,arguments:ScreenArguments(
+                      origin,
+                      id,
+                    )),
                   ),
                 ],
               ),

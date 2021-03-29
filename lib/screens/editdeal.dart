@@ -13,8 +13,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 class EditDealScreen extends StatefulWidget {
 
   static const routeName='/edit-deal';
-
-
   EditDealScreen();
   @override
   _EditDealScreenState createState() => _EditDealScreenState();

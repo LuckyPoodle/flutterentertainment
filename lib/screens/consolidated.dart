@@ -1,3 +1,4 @@
+import 'package:amcollective/models/ScreenArguments.dart';
 import 'package:amcollective/models/category_model.dart';
 import 'package:amcollective/screens/blogpage.dart';
 import 'package:amcollective/screens/nonfeaturedblogs.dart';
@@ -46,7 +47,13 @@ class _ConsolidatedState extends State<Consolidated> {
       });
 
     }else{
-      Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(false).then((_){
+//      Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(false).then((_){
+//        setState(() {
+//          _loading=false;
+//        });
+//      });
+
+      Provider.of<SelectedCategory>(context, listen: false).fetchFromOxygen(false).then((_){
         setState(() {
           _loading=false;
         });
@@ -103,9 +110,15 @@ class _ConsolidatedState extends State<Consolidated> {
     print("current page now pres sbutton become ");
     print(Provider.of<SelectedCategory>(context, listen: false)
         .currentpagenumber);
-    Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(true).then((_){
+//    Provider.of<SelectedCategory>(context, listen: false).fetchFromFeaturedBlogs(true).then((_){
+//      setState(() {
+//        _pressloadmore=false;
+//      });
+//    });
+
+    Provider.of<SelectedCategory>(context, listen: false).fetchFromOxygen(true).then((_){
       setState(() {
-        _pressloadmore=false;
+        _loading=false;
       });
     });
   }
@@ -124,7 +137,11 @@ class _ConsolidatedState extends State<Consolidated> {
 
   Widget _featureItem(Article data) {
     return GestureDetector(
-        onTap: () => Navigator.of(context).pushNamed(PostDetail.routeName,arguments:data.id),
+        onTap: () =>Navigator.of(context).pushNamed(PostDetail.routeName,arguments:ScreenArguments(
+          'toprow',
+          data.id
+          ,
+        )),
         child: Stack(
           children: <Widget>[
             Container(
@@ -242,10 +259,31 @@ class _ConsolidatedState extends State<Consolidated> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Blogs',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+//                  Padding(
+//                    padding: const EdgeInsets.all(8.0),
+//                    child: Text('Blogs',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+//                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: Colors.black,
+                          height: 1,
+                        ),
+                      ),
+                      Text('All Blogs',style: TextStyle(color: Colors.black,fontSize: 26,fontWeight: FontWeight.bold),),
+                      Expanded(
+                        child: Container(
+                          color: Colors.black,
+                          height: 1,
+                        ),
+                      ),
+                    ],
                   ),
+
+                  SizedBox(height: 5,),
+
                   Container(
                     height: 150,
                     child: ListView(
@@ -254,12 +292,30 @@ class _ConsolidatedState extends State<Consolidated> {
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Latest from Featured',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
-                  ),
+//                  Padding(
+//                    padding: const EdgeInsets.all(8.0),
+//                    child: Text('Latest from Featured',style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
+//                  ),
+
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.black,
+                  height: 1,
+                ),
+              ),
+              Text('Featured Blogs',style: TextStyle(color: Colors.black,fontSize: 26,fontWeight: FontWeight.bold),),
+              Expanded(
+                child: Container(
+                  color: Colors.black,
+                  height: 1,
+                ),
+              ),
+            ],
+          ),SizedBox(height: 5,),
                   ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: height*0.6, minHeight: 100),
+                    constraints: BoxConstraints(maxHeight: height*0.6, minHeight: 100,maxWidth: width*0.9),
                     child:
                   ListView(
                       shrinkWrap: true,
@@ -276,6 +332,7 @@ class _ConsolidatedState extends State<Consolidated> {
 
                                 itemBuilder: (context, index) {
                                   return ArticleTile(
+                                    origin: 'mainpage',
                                     id:allthearticles[index].id,
                                     blogname: allthearticles[index].blogname,
                                     date: allthearticles[index].publishedAt ??
@@ -307,7 +364,12 @@ class _ConsolidatedState extends State<Consolidated> {
                     )
                     ,
                   ),
-
+                  SizedBox(height: 20,),
+                  Container(
+                    width: width,
+                    color: Colors.black,
+                    height: 1,
+                  ),
                   SizedBox(height: 20,),
 
                   Container(

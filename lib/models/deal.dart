@@ -25,13 +25,12 @@ class Deal{
       createdBy: data.data()['userId'],
       brandname: data.data()['brandname'],
       dealdetails: data.data()['dealdetails'],
-        imageUrl: data.data()['imageUrl'],
-        imageUrlfromStorage: data.data()['imageUrlfromStorage'],
+      imageUrl: data.data()['imageUrl'],
+      imageUrlfromStorage: data.data()['imageUrlfromStorage'],
       longitude: data.data()['longitude'],
       latitude: data.data()['latitude'],
       region: data.data()['region'],
       imagefile: data.data()['imagefile'],
-      
       id: data.id,
     );
   }
